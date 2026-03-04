@@ -72,9 +72,10 @@ def calculate_patch_similarity(patches1, patches2):
     cosine_sim = dot / (norm1 * norm2 + 1e-8)
     return cosine_sim
 
-def find_static_patches(img_0, img_1, patch_size=14, top_k=150, sim_threshold=0.996):
+def find_static_patches(img_0, img_1, patch_size=14, top_k=150, sim_threshold=0.996, return_similarity=False):
     """
     Identifies significant patches with high similarity across two images.
+    If return_similarity=True, also returns the full (256,) cosine similarity array for all patches.
     """
     patches1 = patchify(img_0, patch_size)
     patches2 = patchify(img_1, patch_size)
@@ -89,6 +90,9 @@ def find_static_patches(img_0, img_1, patch_size=14, top_k=150, sim_threshold=0.
 
     patch_scores.sort(key=lambda x: x[1], reverse=True)
     top_patch_ids = [idx for idx, _ in patch_scores[:top_k]]
+
+    if return_similarity:
+        return top_patch_ids, similarity  # similarity shape: (num_patches,)
     return top_patch_ids
 
 @torch.no_grad()
@@ -148,16 +152,26 @@ def visualize_significant_patches_mask(image, patch_ids, patch_size=14, alpha=0.
     overlay_group = [(patch_ids, color)]
     return draw_patches_overlay(image, overlay_group, patch_size, alpha)
 
-def task_relevant_selection(multihead_attention, image, significant_patches, primary=True, top_k=100):
+def task_relevant_selection(multihead_attention, image, significant_patches, primary=True, top_k=100, return_analysis=False):
     """
     Highlights and compares significant patches with top attention patches.
+
+    Token classes (all patch ids are in local [0, 255] space, NOT LLM-sequence space):
+      Class A (Cache):    high pixel-sim AND low text-attention  = only_significant
+      Class B (Prune):    low  pixel-sim AND low text-attention  = dynamic_irrelevant
+      Class C (Recompute): high pixel-sim AND high text-attention = overlap
+      Class D (Recompute): low  pixel-sim AND high text-attention = only_top
+
+    If return_analysis=True, returns a third element: dict with full attn_scores and class ids.
     """
     attn_score = token_attention_merge(multihead_attention, primary=primary)
     top_patches = get_top_attention_patches(attn_score, top_k)
 
-    only_significant = set(significant_patches) - set(top_patches)
-    only_top = set(top_patches) - set(significant_patches)
-    overlap = set(significant_patches) & set(top_patches)
+    only_significant = set(significant_patches) - set(top_patches)   # Class A
+    overlap          = set(significant_patches) & set(top_patches)   # Class C
+    only_top         = set(top_patches) - set(significant_patches)   # Class D
+    all_patch_ids    = set(range(256))
+    dynamic_irrel    = all_patch_ids - set(significant_patches) - set(top_patches)  # Class B
 
     patch_groups = [
         (significant_patches, (15, 67, 223)),
@@ -171,5 +185,17 @@ def task_relevant_selection(multihead_attention, image, significant_patches, pri
 
     v_token_start = 1 if primary else 257
     remaining = sorted([pid + v_token_start for pid in only_significant])
+
+    if return_analysis:
+        attn_np = attn_score.cpu().numpy() if hasattr(attn_score, 'cpu') else np.array(attn_score)
+        analysis = {
+            "attn_scores":  attn_np,                     # (256,) text-to-vision attention per patch
+            "class_A_ids":  sorted(only_significant),    # Cache
+            "class_B_ids":  sorted(dynamic_irrel),       # Prune candidate
+            "class_C_ids":  sorted(overlap),             # Recompute (static+relevant)
+            "class_D_ids":  sorted(only_top),            # Recompute (dynamic+relevant)
+            "stable_count": len(significant_patches),    # patches with sim >= threshold
+        }
+        return np.array(result_image), remaining, analysis
 
     return np.array(result_image), remaining

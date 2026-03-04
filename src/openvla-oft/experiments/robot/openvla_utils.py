@@ -1,6 +1,7 @@
 """Utils for evaluating OpenVLA or fine-tuned OpenVLA policies."""
 
 import filecmp
+import gc
 import json
 import os
 import shutil
@@ -34,6 +35,7 @@ from prismatic.vla.constants import (
 from prismatic.vla.datasets.rlds.utils.data_utils import NormalizationType
 
 from .vla_cache_utils import find_static_patches, task_relevant_selection, get_layer_mask_schedule
+from .analysis_utils import AttentionHookCapture, FrameStats
 
 from transformers import DynamicCache
 
@@ -717,6 +719,19 @@ def prepare_images_for_vla(images: List[np.ndarray], cfg: Any) -> List[Image.Ima
     return processed_images
 
 
+def _kvcache_to_device(cache, device):
+    """Move a HuggingFace DynamicCache (or legacy tuple) to the target device, in-place."""
+    if cache is None:
+        return
+    if hasattr(cache, 'key_cache') and hasattr(cache, 'value_cache'):
+        cache.key_cache  = [t.to(device) for t in cache.key_cache]
+        cache.value_cache = [t.to(device) for t in cache.value_cache]
+    elif isinstance(cache, (list, tuple)):
+        for k, v in cache:
+            k.data = k.data.to(device)
+            v.data = v.data.to(device)
+
+
 def get_vla_action(
     cfg: Any,
     vla: torch.nn.Module,
@@ -728,6 +743,10 @@ def get_vla_action(
     noisy_action_projector: Optional[torch.nn.Module] = None,
     use_film: bool = False,
     last_caches = None,
+    collect_analysis: bool = False,
+    analysis_frame_idx: int = 0,
+    analysis_task_id: int = 0,
+    analysis_episode_idx: int = 0,
 ) -> List[np.ndarray]:
     """
     Generate action predictions with the VLA policy.
@@ -763,22 +782,58 @@ def get_vla_action(
     
     mask_indices = None
     vla.language_model.config.proportion_attn_var = None
-    
+    frame_stats = None  # Will hold FrameStats if collect_analysis=True
+
     if cfg.use_vla_cache:
         print(">> VLA-Cache inference mode")
         # Step 1: Identify visually stable patches across frames
         if prompt_cache is not None:
-            stable_patches_primary = find_static_patches(all_images[0], prev_images[0], top_k=150)
-            stable_patches_wrist = find_static_patches(all_images[1], prev_images[1], top_k=150)
+            if collect_analysis:
+                stable_patches_primary, sim_scores_primary = find_static_patches(
+                    all_images[0], prev_images[0], top_k=150, return_similarity=True)
+                stable_patches_wrist, sim_scores_wrist = find_static_patches(
+                    all_images[1], prev_images[1], top_k=150, return_similarity=True)
+            else:
+                stable_patches_primary = find_static_patches(all_images[0], prev_images[0], top_k=150)
+                stable_patches_wrist = find_static_patches(all_images[1], prev_images[1], top_k=150)
 
         # Step 2: Use prior attention to filter out task-relevant tokens
         if prev_attn is not None:
-            vis_primary, remaining_static_tokens_primary = task_relevant_selection(
-                prev_attn, result_image[0], stable_patches_primary, primary=True
-            )
-            vis_wrist, remaining_static_tokens_wrist = task_relevant_selection(
-                prev_attn, result_image[1], stable_patches_wrist, primary=False
-            )
+            if collect_analysis:
+                vis_primary, remaining_static_tokens_primary, analysis_primary = task_relevant_selection(
+                    prev_attn, result_image[0], stable_patches_primary, primary=True, return_analysis=True
+                )
+                vis_wrist, remaining_static_tokens_wrist, analysis_wrist = task_relevant_selection(
+                    prev_attn, result_image[1], stable_patches_wrist, primary=False, return_analysis=True
+                )
+                proportion_var = get_layer_mask_schedule(prev_attn)
+                frame_stats = FrameStats(
+                    frame_idx=analysis_frame_idx,
+                    task_id=analysis_task_id,
+                    episode_idx=analysis_episode_idx,
+                    primary_sim_scores=sim_scores_primary,
+                    primary_attn_scores=analysis_primary["attn_scores"],
+                    primary_class_A=analysis_primary["class_A_ids"],
+                    primary_class_B=analysis_primary["class_B_ids"],
+                    primary_class_C=analysis_primary["class_C_ids"],
+                    primary_class_D=analysis_primary["class_D_ids"],
+                    primary_stable_count=analysis_primary["stable_count"],
+                    wrist_sim_scores=sim_scores_wrist,
+                    wrist_attn_scores=analysis_wrist["attn_scores"],
+                    wrist_class_A=analysis_wrist["class_A_ids"],
+                    wrist_class_B=analysis_wrist["class_B_ids"],
+                    wrist_class_C=analysis_wrist["class_C_ids"],
+                    wrist_class_D=analysis_wrist["class_D_ids"],
+                    wrist_stable_count=analysis_wrist["stable_count"],
+                    proportion_attn_var=proportion_var.cpu().numpy(),
+                )
+            else:
+                vis_primary, remaining_static_tokens_primary = task_relevant_selection(
+                    prev_attn, result_image[0], stable_patches_primary, primary=True
+                )
+                vis_wrist, remaining_static_tokens_wrist = task_relevant_selection(
+                    prev_attn, result_image[1], stable_patches_wrist, primary=False
+                )
 
             result_image = [vis_primary, vis_wrist]
 
@@ -787,7 +842,10 @@ def get_vla_action(
             mask_indices = torch.tensor(final_static_token_indices, device=DEVICE) if final_static_token_indices else None
 
             vla.language_model.config.reusable_patches = mask_indices
-            vla.language_model.config.proportion_attn_var = get_layer_mask_schedule(prev_attn)
+            # proportion_attn_var is computed from CPU tensors (prev_attn is now on CPU);
+            # move result to GPU before storing on the model config for use in forward pass.
+            sched = get_layer_mask_schedule(prev_attn)
+            vla.language_model.config.proportion_attn_var = sched.to(DEVICE)
 
     else:
         print(">> VLA-Cache disabled")
@@ -825,7 +883,18 @@ def get_vla_action(
         obs["state"] = normalize_proprio(proprio, proprio_norm_stats)
         proprio = obs["state"]
 
-    # Start timer
+    # Move KV cache back to GPU right before forward pass, then free CPU copy.
+    # (It was offloaded to CPU after the previous query to make room for the
+    # bitsandbytes INT4 dequantisation workspace ~86 MiB per FFN layer.)
+    _kvcache_to_device(prompt_cache, DEVICE)
+    # Release GPU memory before forward pass: return reserved-but-unallocated
+    # blocks to CUDA so the allocator has a contiguous pool to draw from.
+    gc.collect()
+    torch.cuda.empty_cache()
+
+    # Start timer; reset FLOPs counter if collecting analysis
+    if collect_analysis:
+        vla.language_model.all_FLOPs = 0
     start_time = time.time()
     metrics = {}
     # Generate action
@@ -833,24 +902,54 @@ def get_vla_action(
         # Standard VLA output (single-image inputs, discrete actions)
         action, _ = vla.predict_action(**inputs, unnorm_key=cfg.unnorm_key, do_sample=False)
     else:
-        # Custom action head for continuous actions
-        action, _, last_caches = vla.predict_action(
-            **inputs,
-            unnorm_key=cfg.unnorm_key,
-            do_sample=False,
-            proprio=proprio,
-            proprio_projector=proprio_projector,
-            noisy_action_projector=noisy_action_projector,
-            action_head=action_head,
-            use_film=use_film,
-            past_key_values=prompt_cache,
-        )
+        # Custom action head for continuous actions.
+        # AttentionHookCapture intercepts each LlamaDecoderLayer's attention output,
+        # moves it to CPU immediately, and returns None to LlamaModel's accumulator.
+        # This keeps peak GPU attention memory at ~47 MB (1 layer) instead of ~1.5 GB
+        # (32 layers accumulated before the forward pass returns).
+        num_layers = len(vla.language_model.model.layers)
+        with AttentionHookCapture(vla.language_model, num_layers) as _cap:
+            with torch.no_grad():
+                action, _, last_caches = vla.predict_action(
+                    **inputs,
+                    unnorm_key=cfg.unnorm_key,
+                    do_sample=False,
+                    proprio=proprio,
+                    proprio_projector=proprio_projector,
+                    noisy_action_projector=noisy_action_projector,
+                    action_head=action_head,
+                    use_film=use_film,
+                    past_key_values=prompt_cache,
+                )
+        # Reconstruct attentions tuple: 32 CPU tensors + cache_position (CPU).
+        # The LlamaModel filled last_caches['attentions'] with (None, ..., cache_pos)
+        # because our hooks replaced each layer's output with None.  We restore the
+        # real attention tensors from the hook capture and keep the cache_position,
+        # which token_attention_merge needs for text-token masking.
+        if last_caches is not None:
+            original_attns = last_caches.get('attentions') or ()
+            cache_pos = original_attns[-1] if original_attns else None
+            last_caches = {
+                'past_key_values': last_caches['past_key_values'],
+                'attentions': _cap.make_attentions_tuple(cache_pos),
+            }
+            # Offload KV cache to CPU so the next forward pass has room for
+            # the bitsandbytes dequantisation workspace (~86 MiB per FFN layer).
+            _kvcache_to_device(last_caches['past_key_values'], 'cpu')
+            gc.collect()
+            torch.cuda.empty_cache()
     # End timer
     end_time = time.time()
     time_elapsed = end_time - start_time
     metrics.update({"time_elapsed": time_elapsed})
     metrics.update({"num_static_tokens_primary": len(remaining_static_tokens_primary) if mask_indices is not None else 0})
     metrics.update({"num_static_tokens_wrist": len(remaining_static_tokens_wrist) if mask_indices is not None else 0})
+    if collect_analysis:
+        llm_flops = getattr(vla.language_model, "all_FLOPs", 0)
+        if frame_stats is not None:
+            frame_stats.llm_flops = float(llm_flops)
+            frame_stats.time_ms = time_elapsed * 1000.0
+        metrics.update({"frame_stats": frame_stats, "llm_flops": llm_flops})
     
     # Extract subset of actions for open loop steps
     action_list = [action[i] for i in range(min(len(action), cfg.num_open_loop_steps))]
