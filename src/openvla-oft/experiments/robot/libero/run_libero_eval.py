@@ -84,6 +84,8 @@ class GenerateConfig:
 
     # Use VLA-Cache for faster inference
     use_vla_cache: bool = True
+    use_prune: bool = False              # If True, prune Class B via v3 (stale KV in cache)
+    use_preprune: bool = False           # If True, pre-prune Class B at projector level (SpecPrune-VLA style, no VLA-Cache)
 
     #################################################################################################################
     # Model-specific parameters
@@ -514,7 +516,7 @@ def run_task(
             }
         )
 
-    return total_episodes, total_successes
+    return total_episodes, total_successes, task_success_rate
 
 
 @draccus.wrap()
@@ -544,8 +546,9 @@ def eval_libero(cfg: GenerateConfig) -> float:
 
     # Start evaluation
     total_episodes, total_successes = 0, 0
+    per_task_success_rates = []
     for task_id in tqdm.tqdm(range(num_tasks)):
-        total_episodes, total_successes = run_task(
+        total_episodes, total_successes, task_sr = run_task(
             cfg,
             task_suite,
             task_id,
@@ -559,7 +562,7 @@ def eval_libero(cfg: GenerateConfig) -> float:
             total_successes,
             log_file,
         )
-    
+        per_task_success_rates.append(round(task_sr, 4))
 
     # Calculate final success rate
     final_success_rate = float(total_successes) / float(total_episodes) if total_episodes > 0 else 0
@@ -569,6 +572,31 @@ def eval_libero(cfg: GenerateConfig) -> float:
     log_message(f"Total episodes: {total_episodes}", log_file)
     log_message(f"Total successes: {total_successes}", log_file)
     log_message(f"Overall success rate: {final_success_rate:.4f} ({final_success_rate * 100:.1f}%)", log_file)
+
+    # Save structured JSON results for Phase 1.2 comparison
+    if cfg.use_preprune:
+        condition = "preprune"
+    elif cfg.use_prune:
+        condition = "cache_prune"
+    elif cfg.use_vla_cache:
+        condition = "cache"
+    else:
+        condition = "baseline"
+    results_dir = os.path.join(os.path.dirname(cfg.local_log_dir), "results")
+    os.makedirs(results_dir, exist_ok=True)
+    results_path = os.path.join(results_dir, f"phase12_{cfg.task_suite_name}_{condition}.json")
+    results_data = {
+        "condition": condition,
+        "suite": cfg.task_suite_name,
+        "num_trials_per_task": cfg.num_trials_per_task,
+        "overall_success_rate": round(final_success_rate, 4),
+        "per_task_success_rates": per_task_success_rates,
+        "total_episodes": total_episodes,
+        "total_successes": total_successes,
+    }
+    with open(results_path, "w") as f:
+        json.dump(results_data, f, indent=2)
+    log_message(f"Results saved to {results_path}", log_file)
 
     # Log to wandb if enabled
     if cfg.use_wandb:

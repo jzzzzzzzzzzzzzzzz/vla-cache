@@ -782,7 +782,11 @@ def get_vla_action(
     
     mask_indices = None
     vla.language_model.config.proportion_attn_var = None
+    vla.language_model.config.prune_patches = None        # cleared every frame; set below if use_prune
+    vla.language_model.config.prepruning_B_indices = None  # cleared every frame; set below if use_preprune
     frame_stats = None  # Will hold FrameStats if collect_analysis=True
+    use_prune = getattr(cfg, 'use_prune', False)
+    use_preprune = getattr(cfg, 'use_preprune', False)
 
     if cfg.use_vla_cache:
         print(">> VLA-Cache inference mode")
@@ -799,6 +803,7 @@ def get_vla_action(
 
         # Step 2: Use prior attention to filter out task-relevant tokens
         if prev_attn is not None:
+            prune_positions_primary, prune_positions_wrist = [], []  # populated below if use_prune
             if collect_analysis:
                 vis_primary, remaining_static_tokens_primary, analysis_primary = task_relevant_selection(
                     prev_attn, result_image[0], stable_patches_primary, primary=True, return_analysis=True
@@ -828,12 +833,21 @@ def get_vla_action(
                     proportion_attn_var=proportion_var.cpu().numpy(),
                 )
             else:
-                vis_primary, remaining_static_tokens_primary = task_relevant_selection(
-                    prev_attn, result_image[0], stable_patches_primary, primary=True
-                )
-                vis_wrist, remaining_static_tokens_wrist = task_relevant_selection(
-                    prev_attn, result_image[1], stable_patches_wrist, primary=False
-                )
+                prune_positions_primary, prune_positions_wrist = [], []
+                if use_prune:
+                    vis_primary, remaining_static_tokens_primary, prune_positions_primary = task_relevant_selection(
+                        prev_attn, result_image[0], stable_patches_primary, primary=True, return_prune=True
+                    )
+                    vis_wrist, remaining_static_tokens_wrist, prune_positions_wrist = task_relevant_selection(
+                        prev_attn, result_image[1], stable_patches_wrist, primary=False, return_prune=True
+                    )
+                else:
+                    vis_primary, remaining_static_tokens_primary = task_relevant_selection(
+                        prev_attn, result_image[0], stable_patches_primary, primary=True
+                    )
+                    vis_wrist, remaining_static_tokens_wrist = task_relevant_selection(
+                        prev_attn, result_image[1], stable_patches_wrist, primary=False
+                    )
 
             result_image = [vis_primary, vis_wrist]
 
@@ -846,6 +860,38 @@ def get_vla_action(
             # move result to GPU before storing on the model config for use in forward pass.
             sched = get_layer_mask_schedule(prev_attn)
             vla.language_model.config.proportion_attn_var = sched.to(DEVICE)
+
+            # Step 4 (Prune B): two modes depending on use_preprune flag
+            if (use_prune or use_preprune) and (prune_positions_primary or prune_positions_wrist):
+                all_prune_positions = prune_positions_primary + prune_positions_wrist
+
+                if use_preprune:
+                    # ── Pre-prune mode (SpecPrune-VLA style) ──────────────────────────────
+                    # B tokens are removed at the projector output level in modeling_prismatic.py,
+                    # so they NEVER enter the LLM or the DynamicCache.
+                    # Other tokens compute full attention over only the non-B positions.
+                    # No softmax pollution (B has no KV in the cache).
+                    # No distribution shift from masking (full attention on remaining tokens).
+                    #
+                    # Convert B positions from LLM-sequence space to projected_patch_embeddings
+                    # index space: embedding_idx = llm_pos - 1 (BOS is at llm_pos 0).
+                    b_emb_indices = torch.tensor(
+                        [p - 1 for p in all_prune_positions], dtype=torch.long
+                    )
+                    vla.language_model.config.prepruning_B_indices = b_emb_indices
+                    # Disable A-class KV reuse (no stale cache should participate).
+                    vla.language_model.config.reusable_patches = None
+                    vla.language_model.config.prune_patches = None
+                    # Reset KV cache: each step is a fresh computation over non-B tokens.
+                    prompt_cache = DynamicCache()
+                else:
+                    # ── v3 mode (stale KV, no mask) ───────────────────────────────────────
+                    # B positions keep their stale KV in the cache (like A-class in VLA-Cache).
+                    # Other tokens attend to stale B KV normally (full-attention, no blocking).
+                    # Zeroing was removed: zero K gives Q·K_B=0→exp(0)=1 dominating softmax.
+                    vla.language_model.config.prune_patches = torch.tensor(
+                        all_prune_positions, dtype=torch.long, device=DEVICE
+                    )
 
     else:
         print(">> VLA-Cache disabled")

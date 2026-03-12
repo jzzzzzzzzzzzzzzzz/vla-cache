@@ -1,0 +1,20 @@
+{
+  "condition": "cache_prune",
+  "suite": "libero_spatial",
+  "num_trials_per_task": 3,
+  "overall_success_rate": 0.9333,
+  "per_task_success_rates": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    0.6667,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    0.6667
+  ],
+  "total_episodes": 30,
+  "total_successes": 28
+}

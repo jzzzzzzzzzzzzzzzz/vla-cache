@@ -152,7 +152,8 @@ def visualize_significant_patches_mask(image, patch_ids, patch_size=14, alpha=0.
     overlay_group = [(patch_ids, color)]
     return draw_patches_overlay(image, overlay_group, patch_size, alpha)
 
-def task_relevant_selection(multihead_attention, image, significant_patches, primary=True, top_k=100, return_analysis=False):
+def task_relevant_selection(multihead_attention, image, significant_patches, primary=True, top_k=100,
+                            return_analysis=False, return_prune=False):
     """
     Highlights and compares significant patches with top attention patches.
 
@@ -163,6 +164,7 @@ def task_relevant_selection(multihead_attention, image, significant_patches, pri
       Class D (Recompute): low  pixel-sim AND high text-attention = only_top
 
     If return_analysis=True, returns a third element: dict with full attn_scores and class ids.
+    If return_prune=True, returns an extra list of Class B token positions in LLM sequence space.
     """
     attn_score = token_attention_merge(multihead_attention, primary=primary)
     top_patches = get_top_attention_patches(attn_score, top_k)
@@ -185,6 +187,8 @@ def task_relevant_selection(multihead_attention, image, significant_patches, pri
 
     v_token_start = 1 if primary else 257
     remaining = sorted([pid + v_token_start for pid in only_significant])
+    # Class B positions in LLM sequence space (same offset convention as Class A)
+    prune_positions = sorted([pid + v_token_start for pid in dynamic_irrel])
 
     if return_analysis:
         attn_np = attn_score.cpu().numpy() if hasattr(attn_score, 'cpu') else np.array(attn_score)
@@ -196,6 +200,10 @@ def task_relevant_selection(multihead_attention, image, significant_patches, pri
             "class_D_ids":  sorted(only_top),            # Recompute (dynamic+relevant)
             "stable_count": len(significant_patches),    # patches with sim >= threshold
         }
+        if return_prune:
+            return np.array(result_image), remaining, analysis, prune_positions
         return np.array(result_image), remaining, analysis
 
+    if return_prune:
+        return np.array(result_image), remaining, prune_positions
     return np.array(result_image), remaining

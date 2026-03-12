@@ -1009,6 +1009,18 @@ class OpenVLAForActionPrediction(PrismaticForConditionalGeneration):
         # Process vision features
         projected_patch_embeddings = self._process_vision_features(pixel_values, language_embeddings, use_film)
 
+        # Pre-prune B tokens at projector level (SpecPrune-VLA style).
+        # When `prepruning_B_indices` is set, B tokens are physically removed from the
+        # embedding sequence before entering the LLM.  The DynamicCache is reset each step
+        # (see openvla_utils.py), so B positions never appear in the KV cache.
+        # Other tokens compute full attention over only the non-B positions (no masking,
+        # no softmax pollution) — equivalent to SpecPrune-VLA applied to Class-B tokens.
+        prepruning_B_indices = getattr(self.language_model.config, 'prepruning_B_indices', None)
+        if prepruning_B_indices is not None and projected_patch_embeddings.size(1) == 512:
+            keep = torch.ones(512, dtype=torch.bool, device=projected_patch_embeddings.device)
+            keep[prepruning_B_indices] = False
+            projected_patch_embeddings = projected_patch_embeddings[:, keep, :]
+
         # Add proprioceptive features if provided
         use_proprio = proprio_projector is not None and proprio is not None
         if use_proprio:
