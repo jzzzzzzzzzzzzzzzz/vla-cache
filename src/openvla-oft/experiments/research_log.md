@@ -689,12 +689,101 @@ E0 Baseline 95.5% ✓ (20-trial)
 
 ---
 
-## 八、当前代码状态确认（2026-03-14）
+## 八、当前代码状态确认（2026-03-16）
 
 | 配置 | 实际行为 | 已验证SR |
 |------|---------|---------|
 | `use_preprune_v3=False, use_vla_cache=False` | Baseline | 95.5% |
 | `use_preprune_v3=False, use_vla_cache=True` | VLA-Cache only | 95.0% |
 | `use_preprune=True, use_vla_cache=True` | Cascade v2 | 79.5% |
-| `use_preprune_v3=True, use_vla_cache=False` | **E2_fixed（当前推荐）** | **93.3%** |
-| `use_preprune_v3=True, use_vla_cache=True` | E3残留（等同E2_fixed，fixed_prune_p_primary未写入cache）| 未测 |
+| `use_preprune_v3=True, use_vla_cache=False` | **E2_fixed/E3（空间冗余）** | **93.0%** (20t) |
+| `use_vla_cache=True, skip_layers="3,4,5,6"` | **E5f（深度冗余）** | **88.5%** (20t) |
+| `use_preprune_v3=True, use_vla_cache=True` | 未专门测试（等同E2_fixed）| — |
+
+**研究方向结论（2026-03-16）**：
+- Token Physical Deletion（pre-prune）降低 SR 主因：OpenVLA-OFT 用 L1回归+parallel decoding（单次forward无纠错），对序列完整性敏感；与 EfficientVLA 在 CogACT（扩散头迭代去噪，token删除反而过滤噪声）不同，故放弃 token deletion 路线。
+- **主线**：VLA-Cache（时间冗余，KV复用）+ Layer Skip（深度冗余）
+- **辅线**：v3 Extended Cache（A+B类stale KV，无物理删除），作为对照组
+
+---
+
+## 九、服务器部署（4090，BF16）
+
+### 9.1 部署文件结构
+
+```
+deploy/
+├── README.md                          # 快速部署指南
+├── setup_server.sh                    # 一键安装：conda + PyTorch + 依赖 + patch
+├── run_all_bf16.sh                    # 批量实验：E0/E1/E5f，20-trial，BF16
+├── bf16_changes.md                    # INT4 → BF16 详细变更清单
+├── vla_cache_deploy_patches.tar.gz    # 打包备份（43KB）
+└── modified_site_packages/
+    ├── modeling_llama.py              # 已修改：Layer Skip T11
+    └── cache_utils.py                 # 已修改：from_legacy_cache Bug3修复
+```
+
+### 9.2 INT4 → BF16 变更清单
+
+| 变更项 | 详情 | 是否需要改代码 |
+|--------|------|--------------|
+| 运行 flag | 去掉 `--load_in_4bit True` | ❌ 不改代码，只改命令 |
+| 模型加载 | `torch_dtype=torch.bfloat16` 已有，`load_in_4bit=False` 自动走 `.to(DEVICE)` | ❌ 无需改 |
+| KV cache CPU卸载 | INT4必需（BNB ~86MB/layer工作空间），BF16可选 | ❌ 保留无害，可选注释 |
+| SDPA路径选择 | `output_attentions=True` 强制 eager，与精度无关 | ❌ 无需改 |
+| MUJOCO渲染 | 服务器需 `MUJOCO_GL=egl` | ❌ 环境变量 |
+| site-packages patches | `modeling_llama.py` + `cache_utils.py` 两个patch | ✅ 安装后覆盖 |
+
+### 9.3 预期性能差异
+
+| 指标 | INT4本地（12GB）| BF16服务器（4090 24GB）| 说明 |
+|------|-----------------|------------------------|------|
+| 模型 VRAM | ~4.5 GB | ~14 GB | BF16 占用更多但 4090 够用 |
+| Baseline CUDA 延迟 | ~551ms | **≤350ms（预期）** | 4090 BF16 Tensor Core 更快 |
+| E5f CUDA 延迟 | ~303ms | **≤200ms（预期）** | Layer Skip + 更快的硬件 |
+| SR 差异 | INT4（量化噪声）| BF16（更精确）| 预计 SR 持平或略升 |
+
+### 9.4 服务器运行命令（BF16）
+
+```bash
+# 激活环境
+conda activate openvla-oft
+export MUJOCO_GL=egl
+export PYTHONPATH=/path/to/LIBERO:$PYTHONPATH
+cd /path/to/vla-cache/src/openvla-oft
+
+# E0 Baseline（BF16）
+CUDA_VISIBLE_DEVICES=0 python experiments/robot/libero/run_libero_eval.py \
+    --pretrained_checkpoint checkpoints/openvla-7b-oft-finetuned-libero-spatial-object-goal-10 \
+    --task_suite_name libero_spatial \
+    --num_trials_per_task 20 \
+    --run_id_note "E0_baseline_bf16"
+
+# E1 VLA-Cache（BF16）
+CUDA_VISIBLE_DEVICES=0 python experiments/robot/libero/run_libero_eval.py \
+    --pretrained_checkpoint checkpoints/openvla-7b-oft-finetuned-libero-spatial-object-goal-10 \
+    --task_suite_name libero_spatial \
+    --num_trials_per_task 20 \
+    --use_vla_cache True \
+    --run_id_note "E1_vlacache_bf16"
+
+# E5f VLA-Cache + Layer Skip{3,4,5,6}（BF16）
+CUDA_VISIBLE_DEVICES=0 python experiments/robot/libero/run_libero_eval.py \
+    --pretrained_checkpoint checkpoints/openvla-7b-oft-finetuned-libero-spatial-object-goal-10 \
+    --task_suite_name libero_spatial \
+    --num_trials_per_task 20 \
+    --use_vla_cache True \
+    --skip_layers "3,4,5,6" \
+    --run_id_note "E5f_vlacache_skip3456_bf16"
+```
+
+### 9.5 Checkpoint 传输
+
+Checkpoint 大小约 15 GB（含 4 个 safetensors + action_head + proprio_projector 等）：
+```bash
+# SCP 传输（推荐）
+scp -r checkpoints/openvla-7b-oft-finetuned-libero-spatial-object-goal-10 \
+    user@server:/path/to/vla-cache/src/openvla-oft/checkpoints/
+
+# 或 HuggingFace 下载（见 deploy/bf16_changes.md §8）
+```
