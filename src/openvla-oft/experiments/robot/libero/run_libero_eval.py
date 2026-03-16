@@ -85,7 +85,11 @@ class GenerateConfig:
     # Use VLA-Cache for faster inference
     use_vla_cache: bool = True
     use_prune: bool = False              # If True, prune Class B via v3 (stale KV in cache)
-    use_preprune: bool = False           # If True, pre-prune Class B at projector level (SpecPrune-VLA style, no VLA-Cache)
+    use_preprune: bool = False           # If True, pre-prune Class B at projector level; if use_vla_cache also True → cascade
+    use_preprune_v3: bool = False        # If True, Cascade v3: SpecPrune-VLA style (V_global ∪ V_dynamic ∪ V_local)
+    use_adaptive: bool = False           # If True, ADP velocity adaptive switching (E4)
+    preprune_k_local: int = 80          # V_local size (tokens kept per camera by text-attn); default 80
+    skip_layers: str = ""               # T13: comma-separated layer indices to skip, e.g. "16,17,18,19"; "" = no skip
 
     #################################################################################################################
     # Model-specific parameters
@@ -522,6 +526,12 @@ def run_task(
 @draccus.wrap()
 def eval_libero(cfg: GenerateConfig) -> float:
     """Main function to evaluate a trained policy on LIBERO benchmark tasks."""
+    # T13: parse skip_layers string → set[int]
+    if cfg.skip_layers:
+        cfg.skip_layers = set(int(x) for x in cfg.skip_layers.split(","))
+    else:
+        cfg.skip_layers = set()
+
     # Validate configuration
     validate_config(cfg)
 
@@ -574,7 +584,13 @@ def eval_libero(cfg: GenerateConfig) -> float:
     log_message(f"Overall success rate: {final_success_rate:.4f} ({final_success_rate * 100:.1f}%)", log_file)
 
     # Save structured JSON results for Phase 1.2 comparison
-    if cfg.use_preprune:
+    if cfg.use_preprune_v3 and cfg.use_vla_cache:
+        condition = "cascade_v3"
+    elif cfg.use_preprune_v3:
+        condition = "preprune_v3"
+    elif cfg.use_preprune and cfg.use_vla_cache:
+        condition = "cascade"
+    elif cfg.use_preprune:
         condition = "preprune"
     elif cfg.use_prune:
         condition = "cache_prune"

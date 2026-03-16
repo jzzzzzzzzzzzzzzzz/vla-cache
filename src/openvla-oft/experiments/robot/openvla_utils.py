@@ -34,7 +34,7 @@ from prismatic.vla.constants import (
 )
 from prismatic.vla.datasets.rlds.utils.data_utils import NormalizationType
 
-from .vla_cache_utils import find_static_patches, task_relevant_selection, get_layer_mask_schedule
+from .vla_cache_utils import find_static_patches, task_relevant_selection, get_layer_mask_schedule, token_attention_merge, compute_preprune_mask
 from .analysis_utils import AttentionHookCapture, FrameStats
 
 from transformers import DynamicCache
@@ -724,8 +724,8 @@ def _kvcache_to_device(cache, device):
     if cache is None:
         return
     if hasattr(cache, 'key_cache') and hasattr(cache, 'value_cache'):
-        cache.key_cache  = [t.to(device) for t in cache.key_cache]
-        cache.value_cache = [t.to(device) for t in cache.value_cache]
+        cache.key_cache  = [t.to(device) if isinstance(t, torch.Tensor) else t for t in cache.key_cache]
+        cache.value_cache = [t.to(device) if isinstance(t, torch.Tensor) else t for t in cache.value_cache]
     elif isinstance(cache, (list, tuple)):
         for k, v in cache:
             k.data = k.data.to(device)
@@ -778,15 +778,55 @@ def get_vla_action(
     prev_images = obs["prev_images"]
     prev_images = prepare_images_for_vla(prev_images, cfg)
     prompt_cache = last_caches['past_key_values'] if last_caches is not None else None
-    prev_attn = last_caches['attentions'] if last_caches is not None else None
-    
+    prev_attn_raw = last_caches['attentions'] if last_caches is not None else None
+    # Track whether the first preprune step has already run (so A-class cache is now B-free).
+    preprune_warmup_done = last_caches.get('preprune_warmup_done', False) if last_caches is not None else False
+    # last_full_attn: last attention from a full-sequence (non-compact) step.
+    # Used for get_layer_mask_schedule (needs full-space attn); only valid when not in cascade.
+    last_full_attn = last_caches.get('last_full_attn', None) if last_caches is not None else None
+    # Per-step attention scores (256-d) updated each cascade step via compact-space remapping.
+    # Used as attn_scores_override in task_relevant_selection so B classification stays current.
+    last_attn_scores_primary = last_caches.get('last_attn_scores_primary', None) if last_caches is not None else None
+    last_attn_scores_wrist   = last_caches.get('last_attn_scores_wrist',   None) if last_caches is not None else None
+    # v_global: top-K patch indices from previous step (cascade v3 temporal protection).
+    # Stored as set[int] in local patch space [0..255]. None on step 0 (no history).
+    v_global_primary = last_caches.get('v_global_primary', None) if last_caches is not None else None
+    v_global_wrist   = last_caches.get('v_global_wrist',   None) if last_caches is not None else None
+    # prev_query_images: images from the PREVIOUS model query, used as reference for V_dynamic.
+    # obs["prev_images"] tracks env-step-level previous frame (not per-query), so it can be stale.
+    # Storing in last_caches ensures the reference is always from the previous model call.
+    prev_query_images_raw = last_caches.get('prev_query_images', None) if last_caches is not None else None
+    # init_attn_scores_primary: step 0 FULL-sequence attention scores [256], frozen throughout episode.
+    # Used as V_local for primary pre-prune to avoid compact-attention bias (snowball effect).
+    # None until first step completes (step 0 warmup runs full-vision, sets this).
+    init_attn_scores_primary = last_caches.get('init_attn_scores_primary', None) if last_caches is not None else None
+    # fixed_prune_p_primary: primary prune mask frozen from step 1 (local patch indices 0..255).
+    # With constant N_primary_kept, wrist compact positions are stable → wrist KV reuse works (E3).
+    fixed_prune_p_primary = last_caches.get('fixed_prune_p_primary', None) if last_caches is not None else None
+    # Track which prune_p was used this step (for storing as fixed mask if needed).
+    _prune_p_this_step: list = []
+
     mask_indices = None
     vla.language_model.config.proportion_attn_var = None
     vla.language_model.config.prune_patches = None        # cleared every frame; set below if use_prune
     vla.language_model.config.prepruning_B_indices = None  # cleared every frame; set below if use_preprune
+    _skip = getattr(cfg, 'skip_layers', set())  # T12: layer skip
+    if isinstance(_skip, str):
+        _skip = set(int(x) for x in _skip.split(',') if x.strip()) if _skip else set()
+    vla.language_model.config.skip_layers = _skip
     frame_stats = None  # Will hold FrameStats if collect_analysis=True
     use_prune = getattr(cfg, 'use_prune', False)
     use_preprune = getattr(cfg, 'use_preprune', False)
+    use_preprune_v3 = getattr(cfg, 'use_preprune_v3', False)  # cascade v3 token selection
+
+    # For cascade: compact attention maps from step≥1 have fewer than 256 vision tokens,
+    # which breaks token_attention_merge (expects 256-patch space).
+    # Fix: use last_full_attn (full-space) for get_layer_mask_schedule; use per-step
+    # last_attn_scores_* overrides (kept current via compact-space remapping) for B classification.
+    prev_attn = (last_full_attn if (use_preprune and last_full_attn is not None)
+                 else prev_attn_raw)
+    # B positions from the CURRENT step; set inside Step 4 cascade block.
+    all_prune_positions: list = []
 
     if cfg.use_vla_cache:
         print(">> VLA-Cache inference mode")
@@ -834,12 +874,17 @@ def get_vla_action(
                 )
             else:
                 prune_positions_primary, prune_positions_wrist = [], []
-                if use_prune:
+                if use_prune or use_preprune:
+                    # In cascade mode, last_attn_scores_* are updated each step from compact
+                    # attention via token_attention_merge(..., b_positions=...).  Passing them
+                    # as override keeps B classification current without requiring full-space attns.
                     vis_primary, remaining_static_tokens_primary, prune_positions_primary = task_relevant_selection(
-                        prev_attn, result_image[0], stable_patches_primary, primary=True, return_prune=True
+                        prev_attn, result_image[0], stable_patches_primary, primary=True, return_prune=True,
+                        attn_scores_override=last_attn_scores_primary if use_preprune else None
                     )
                     vis_wrist, remaining_static_tokens_wrist, prune_positions_wrist = task_relevant_selection(
-                        prev_attn, result_image[1], stable_patches_wrist, primary=False, return_prune=True
+                        prev_attn, result_image[1], stable_patches_wrist, primary=False, return_prune=True,
+                        attn_scores_override=last_attn_scores_wrist if use_preprune else None
                     )
                 else:
                     vis_primary, remaining_static_tokens_primary = task_relevant_selection(
@@ -861,34 +906,69 @@ def get_vla_action(
             sched = get_layer_mask_schedule(prev_attn)
             vla.language_model.config.proportion_attn_var = sched.to(DEVICE)
 
-            # Step 4 (Prune B): two modes depending on use_preprune flag
-            if (use_prune or use_preprune) and (prune_positions_primary or prune_positions_wrist):
-                all_prune_positions = prune_positions_primary + prune_positions_wrist
+            # Step 4 (Prune B): select mode based on flags
+            if use_preprune_v3:
+                # ── Cascade v3 / E3: primary-only pre-prune (V_global ∪ V_dynamic ∪ V_local) ─
+                _ref_images = prev_query_images_raw if prev_query_images_raw is not None else prev_images
+                _k_local = getattr(cfg, 'preprune_k_local', 80)
+                _v_local_primary = init_attn_scores_primary if init_attn_scores_primary is not None else last_attn_scores_primary
 
-                if use_preprune:
-                    # ── Pre-prune mode (SpecPrune-VLA style) ──────────────────────────────
-                    # B tokens are removed at the projector output level in modeling_prismatic.py,
-                    # so they NEVER enter the LLM or the DynamicCache.
-                    # Other tokens compute full attention over only the non-B positions.
-                    # No softmax pollution (B has no KV in the cache).
-                    # No distribution shift from masking (full attention on remaining tokens).
-                    #
-                    # Convert B positions from LLM-sequence space to projected_patch_embeddings
-                    # index space: embedding_idx = llm_pos - 1 (BOS is at llm_pos 0).
+                # E3 (use_vla_cache=True) steady state: use frozen prune mask from step 1.
+                # Fixed N_primary_kept → wrist compact positions constant → wrist KV reuse valid.
+                # Step 0→1 transition: fixed_prune_p_primary not yet set → compute dynamically.
+                if cfg.use_vla_cache and fixed_prune_p_primary is not None:
+                    prune_p = fixed_prune_p_primary  # frozen, stable N_primary_kept
+                else:
+                    prune_p, _ = compute_preprune_mask(
+                        all_images[0], _ref_images[0],
+                        v_global=v_global_primary,
+                        last_attn_scores=_v_local_primary,
+                        K_local=_k_local,
+                    )
+                _prune_p_this_step = prune_p  # record for last_caches write-back
+
+                # Wrist: never pre-prune (viewpoint drifts, frozen V_local unsafe)
+                all_prune_positions = [p + 1 for p in prune_p]  # primary only, LLM space
+                if all_prune_positions:
                     b_emb_indices = torch.tensor(
                         [p - 1 for p in all_prune_positions], dtype=torch.long
                     )
                     vla.language_model.config.prepruning_B_indices = b_emb_indices
-                    # Disable A-class KV reuse (no stale cache should participate).
+
+                if cfg.use_vla_cache and fixed_prune_p_primary is not None and prompt_cache is not None:
+                    # E3 steady state: wrist A-class KV reuse in compact space.
+                    # Compact wrist position = orig_wrist_pos - 256 + N_primary_kept
+                    # (256 wrist tokens shift down by N_primary_kept after BOS + primary block).
+                    N_primary_kept = 256 - len(prune_p)
+                    wrist_compact_A = [p - 256 + N_primary_kept for p in remaining_static_tokens_wrist]
+                    mask_indices = torch.tensor(wrist_compact_A, device=DEVICE) if wrist_compact_A else None
+                    vla.language_model.config.reusable_patches = mask_indices
+                    # proportion_attn_var already set above from get_layer_mask_schedule(prev_attn)
+                    # (keep the existing schedule — no override needed)
+                else:
+                    # E2_fixed or E3 cold start (step 0→1): no KV reuse, fresh cache.
                     vla.language_model.config.reusable_patches = None
+                    vla.language_model.config.proportion_attn_var = None
+                    mask_indices = None
+                    prompt_cache = DynamicCache()
+
+            elif (use_prune or use_preprune) and (prune_positions_primary or prune_positions_wrist):
+                all_prune_positions = prune_positions_primary + prune_positions_wrist
+
+                if use_preprune:
+                    # ── Cascade v2: Pre-prune B at projector level (no VLA-Cache A reuse) ──
+                    b_emb_indices = torch.tensor(
+                        [p - 1 for p in all_prune_positions], dtype=torch.long
+                    )
+                    vla.language_model.config.prepruning_B_indices = b_emb_indices
                     vla.language_model.config.prune_patches = None
-                    # Reset KV cache: each step is a fresh computation over non-B tokens.
+
+                    vla.language_model.config.reusable_patches = None
+                    vla.language_model.config.proportion_attn_var = None
+                    mask_indices = None
                     prompt_cache = DynamicCache()
                 else:
-                    # ── v3 mode (stale KV, no mask) ───────────────────────────────────────
-                    # B positions keep their stale KV in the cache (like A-class in VLA-Cache).
-                    # Other tokens attend to stale B KV normally (full-attention, no blocking).
-                    # Zeroing was removed: zero K gives Q·K_B=0→exp(0)=1 dominating softmax.
+                    # ── Stale KV mode (no mask) ──────────────────────────────────────────
                     vla.language_model.config.prune_patches = torch.tensor(
                         all_prune_positions, dtype=torch.long, device=DEVICE
                     )
@@ -897,6 +977,25 @@ def get_vla_action(
         print(">> VLA-Cache disabled")
         prompt_cache = None
         mask_indices = None
+
+    # E2 mode: v3 pre-prune without VLA-Cache
+    # Runs after the VLA-Cache disabled branch; skipped when use_vla_cache=True (handled in Step 4).
+    if use_preprune_v3 and not cfg.use_vla_cache and last_attn_scores_primary is not None:
+        _ref_images = prev_query_images_raw if prev_query_images_raw is not None else prev_images
+        _k_local = getattr(cfg, 'preprune_k_local', 80)
+        _v_local_primary = init_attn_scores_primary if init_attn_scores_primary is not None else last_attn_scores_primary
+        prune_p, _ = compute_preprune_mask(
+            all_images[0], _ref_images[0],
+            v_global=v_global_primary,
+            last_attn_scores=_v_local_primary,
+            K_local=_k_local,
+        )
+        prune_w = []  # wrist: skip pre-prune (viewpoint changes, frozen V_local unsafe)
+        all_prune_positions = [p + 1 for p in prune_p] + [p + 257 for p in prune_w]
+        if all_prune_positions:
+            b_emb_indices = torch.tensor([p - 1 for p in all_prune_positions], dtype=torch.long)
+            vla.language_model.config.prepruning_B_indices = b_emb_indices
+        prompt_cache = DynamicCache()
 
     if prompt_cache is None:
         prompt_cache = DynamicCache()
@@ -975,9 +1074,48 @@ def get_vla_action(
         if last_caches is not None:
             original_attns = last_caches.get('attentions') or ()
             cache_pos = original_attns[-1] if original_attns else None
+            # Cascade warmup: mark done after the first preprune step (prev_attn_raw existed).
+            # Use prev_attn_raw (not the possibly-overridden prev_attn) to detect cascade steps.
+            _preprune_active_this_step = (use_preprune or use_preprune_v3) and bool(all_prune_positions)
+            _new_attns = _cap.make_attentions_tuple(cache_pos)
+            # last_full_attn: only update on full-sequence (non-cascade) steps.
+            _new_full_attn = last_full_attn if _preprune_active_this_step else _new_attns
+            # Per-step attn scores for cascade B classification (updated via compact remapping).
+            # On cascade steps: recompute from compact _new_attns + current B positions.
+            # On full steps: recompute from full _new_attns (b_positions=None).
+            if _preprune_active_this_step and all_prune_positions:
+                _new_scores_primary = token_attention_merge(
+                    _new_attns, primary=True, b_positions=all_prune_positions)
+                _new_scores_wrist = token_attention_merge(
+                    _new_attns, primary=False, b_positions=all_prune_positions)
+            else:
+                _new_scores_primary = token_attention_merge(_new_attns, primary=True)
+                _new_scores_wrist   = token_attention_merge(_new_attns, primary=False)
+            # V_global: top-K indices from current step's attention (for next step's pre-prune)
+            _K_GLOBAL = 60
+            _new_v_global_primary = set(_new_scores_primary.topk(_K_GLOBAL).indices.tolist())
+            _new_v_global_wrist   = set(_new_scores_wrist.topk(_K_GLOBAL).indices.tolist())
+            # init_attn_scores_primary: frozen at step 0 (full-sequence, unbiased).
+            # Carry forward unchanged once set; _new_scores_primary at step 0 is full-sequence
+            # because _preprune_active_this_step is False (no pruning yet).
+            _existing_init = last_caches.get('init_attn_scores_primary', None)
+            _init_scores_primary = (
+                _existing_init if _existing_init is not None  # already set → persist
+                else (_new_scores_primary if not _preprune_active_this_step else None)  # step 0: capture
+            )
             last_caches = {
                 'past_key_values': last_caches['past_key_values'],
-                'attentions': _cap.make_attentions_tuple(cache_pos),
+                'attentions': _new_attns,
+                'preprune_warmup_done': _preprune_active_this_step or preprune_warmup_done,
+                'last_full_attn': _new_full_attn,
+                'last_attn_scores_primary': _new_scores_primary,
+                'last_attn_scores_wrist':   _new_scores_wrist,
+                'v_global_primary': _new_v_global_primary,
+                'v_global_wrist':   _new_v_global_wrist,
+                'init_attn_scores_primary': _init_scores_primary,
+                # Store current images so next query can use them for V_dynamic pixel-sim.
+                # result_image = all_images before pop(0), i.e. [primary, wrist] PIL images.
+                'prev_query_images': result_image,
             }
             # Offload KV cache to CPU so the next forward pass has room for
             # the bitsandbytes dequantisation workspace (~86 MiB per FFN layer).

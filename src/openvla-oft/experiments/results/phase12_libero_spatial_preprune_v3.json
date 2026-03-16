@@ -1,0 +1,20 @@
+{
+  "condition": "preprune_v3",
+  "suite": "libero_spatial",
+  "num_trials_per_task": 20,
+  "overall_success_rate": 0.93,
+  "per_task_success_rates": [
+    1.0,
+    0.95,
+    1.0,
+    1.0,
+    0.5,
+    1.0,
+    1.0,
+    0.95,
+    1.0,
+    0.9
+  ],
+  "total_episodes": 200,
+  "total_successes": 186
+}
