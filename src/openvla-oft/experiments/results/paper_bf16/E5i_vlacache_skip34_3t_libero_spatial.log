@@ -1,0 +1,1611 @@
+2026-03-22 23:43:48.683443: I tensorflow/core/util/port.cc:113] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2026-03-22 23:43:48.730462: E external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:9261] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+2026-03-22 23:43:48.730493: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:607] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+2026-03-22 23:43:48.731760: E external/local_xla/xla/stream_executor/cuda/cuda_blas.cc:1515] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+2026-03-22 23:43:48.738733: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 AVX512F AVX512_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2026-03-22 23:43:49.702352: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Could not find TensorRT
+[robosuite WARNING] No private macro file found! (macros.py:53)
+[robosuite WARNING] It is recommended to use a private macro file (macros.py:54)
+[robosuite WARNING] To setup, run: python /root/sj-tmp/conda-envs/openvla-oft/lib/python3.10/site-packages/robosuite/scripts/setup_macros.py (macros.py:55)
+Gym has been unmaintained since 2022 and does not support NumPy 2.0 amongst other critical functionality.
+Please upgrade to Gymnasium, the maintained drop-in replacement of Gym, or contact the authors of your software and request that they upgrade.
+See the migration guide at https://gymnasium.farama.org/introduction/migration_guide/ for additional information.
+Using LIBERO constants:
+  NUM_ACTIONS_CHUNK = 8
+  ACTION_DIM = 7
+  PROPRIO_DIM = 8
+  ACTION_PROPRIO_NORMALIZATION_TYPE = bounds_q99
+If needed, manually set the correct constants in `prismatic/vla/constants.py`!
+03/22 [23:44:13] INFO     | >> generated new fontManager    font_manager.py:1443
+/root/sj-tmp/conda-envs/openvla-oft/lib/python3.10/site-packages/matplotlib/_mathtext.py:30: PyparsingDeprecationWarning: 'enablePackrat' deprecated - use 'enable_packrat'
+  ParserElement.enablePackrat()
+                 WARNING  | >> In                                    core.py:201
+                          /root/sj-tmp/conda-envs/openvla-oft/lib/py            
+                          thon3.10/site-packages/matplotlib/mpl-data            
+                          /stylelib/classic.mplstyle: 'parseString'             
+                          deprecated - use 'parse_string'                       
+                 WARNING  | >> In                                    core.py:201
+                          /root/sj-tmp/conda-envs/openvla-oft/lib/py            
+                          thon3.10/site-packages/matplotlib/mpl-data            
+                          /stylelib/classic.mplstyle: 'resetCache'              
+                          deprecated - use 'reset_cache'                        
+Instantiating pretrained VLA policy...
+Created backup of original config at: /root/sj-tmp/workspace/vla-cache/src/openvla-oft/checkpoints/openvla-7b-oft-finetuned-libero-spatial-object-goal-10/config.json.back.20260322_234416
+Updated config.json at: /root/sj-tmp/workspace/vla-cache/src/openvla-oft/checkpoints/openvla-7b-oft-finetuned-libero-spatial-object-goal-10/config.json
+Changes made:
+  - Set AutoConfig to "configuration_prismatic.OpenVLAConfig"
+  - Set AutoModelForVision2Seq to "modeling_prismatic.OpenVLAForActionPrediction"
+03/22 [23:44:16] WARNING  | >> Expected                modeling_prismatic.py:333
+                          `transformers==4.40.1` and                            
+                          `tokenizers==0.19.1` but got                          
+                          `transformers==4.47.0` and                            
+                          `tokenizers==0.21.1`; there                           
+                          might be inference-time                               
+                          regressions due to                                    
+                          dependency changes. If in                             
+                          doubt, pleaseuse the above                            
+                          versions.                                             
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:00<00:01,  2.78it/s]Loading checkpoint shards:  50%|█████     | 2/4 [00:00<00:00,  3.09it/s]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:00<00:00,  3.19it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:01<00:00,  3.29it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:01<00:00,  3.20it/s]
+Loaded model: <class 'transformers_modules.openvla-7b-oft-finetuned-libero-spatial-object-goal-10.modeling_prismatic.OpenVLAForActionPrediction'>
+03/22 [23:44:28] INFO     | >> Logging to local log file: run_libero_eval.py:215
+                          ./experiments/logs/EVAL-libero_                       
+                          spatial-openvla-2026_03_22-23_4                       
+                          4_14--E5i_vlacache_skip34_3t.tx                       
+                          t                                                     
+[info] using task orders [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+                 INFO     | >> Task suite: libero_spatial run_libero_eval.py:230
+  0%|          | 0/10 [00:00<?, ?it/s][Warning]: datasets path /root/sj-tmp/workspace/LIBERO/libero/libero/../datasets does not exist!
+                 INFO     | >> Using default initial      run_libero_eval.py:230
+                          states                                                
+[Warning]: datasets path /root/sj-tmp/workspace/LIBERO/libero/libero/../datasets does not exist!
+
+  0%|          | 0/3 [00:00<?, ?it/s][A03/22 [23:44:31] INFO     | >>                            run_libero_eval.py:230
+                          Task: pick up the black bowl                          
+                          between the plate and the                             
+                          ramekin and place it on the                           
+                          plate                                                 
+                 INFO     | >> Starting episode 1...      run_libero_eval.py:230
+LlamaModel is using LlamaSdpaAttention, but `torch.nn.functional.scaled_dot_product_attention` does not support `output_attentions=True`. Falling back to the manual attention implementation, but specifying the manual implementation will be required from Transformers version v5.0.0 onwards. This warning can be removed using the argument `attn_implementation="eager"` when loading the model.
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+>> VLA-Cache inference mode
+Current CUDA latency: 568.827026 ms | Average CUDA latency: 568.827026 ms, Average TFLOPs: 3.763064
+>> VLA-Cache inference mode
+Current CUDA latency: 454.872986 ms | Average CUDA latency: 511.850006 ms, Average TFLOPs: 3.390463
+>> VLA-Cache inference mode
+Current CUDA latency: 430.138489 ms | Average CUDA latency: 484.612834 ms, Average TFLOPs: 3.263878
+>> VLA-Cache inference mode
+Current CUDA latency: 295.398193 ms | Average CUDA latency: 437.309174 ms, Average TFLOPs: 3.194700
+>> VLA-Cache inference mode
+Current CUDA latency: 125.803902 ms | Average CUDA latency: 375.008119 ms, Average TFLOPs: 3.155379
+>> VLA-Cache inference mode
+Current CUDA latency: 551.234070 ms | Average CUDA latency: 404.379111 ms, Average TFLOPs: 3.130844
+>> VLA-Cache inference mode
+Current CUDA latency: 254.608093 ms | Average CUDA latency: 382.983251 ms, Average TFLOPs: 3.093225
+>> VLA-Cache inference mode
+Current CUDA latency: 122.223389 ms | Average CUDA latency: 350.388268 ms, Average TFLOPs: 3.063959
+>> VLA-Cache inference mode
+Current CUDA latency: 285.727539 ms | Average CUDA latency: 343.203743 ms, Average TFLOPs: 3.043249
+>> VLA-Cache inference mode
+Current CUDA latency: 146.739548 ms | Average CUDA latency: 323.557323 ms, Average TFLOPs: 3.032390
+Average time per step: 801.5895 ms, Control Frequency: 9.98 Hz, Token Reusing Ratio (Primary): 33.87 %, , Token Reusing Ratio (Wrist): 32.11 %
+Saved rollout MP4 at path ./rollouts/2026_03_22/primary--2026_03_22-23_44_14--episode=1--success=True--task=pick_up_the_black_bowl_between_the_plate_and_the_r.mp4
+Saved rollout MP4 at path ./rollouts/2026_03_22/wrist--2026_03_22-23_44_14--episode=1--success=True--task=pick_up_the_black_bowl_between_the_plate_and_the_r.mp4
+03/22 [23:45:34] INFO     | >> Success: True              run_libero_eval.py:230
+                 INFO     | >> # episodes completed so    run_libero_eval.py:230
+                          far: 1                                                
+                 INFO     | >> # successes: 1 (100.0%)    run_libero_eval.py:230
+
+ 33%|███▎      | 1/3 [01:02<02:05, 62.88s/it][A                 INFO     | >>                            run_libero_eval.py:230
+                          Task: pick up the black bowl                          
+                          between the plate and the                             
+                          ramekin and place it on the                           
+                          plate                                                 
+                 INFO     | >> Starting episode 2...      run_libero_eval.py:230
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+>> VLA-Cache inference mode
+Current CUDA latency: 419.554871 ms | Average CUDA latency: 332.284373 ms, Average TFLOPs: 3.098815
+>> VLA-Cache inference mode
+Current CUDA latency: 422.479553 ms | Average CUDA latency: 339.800638 ms, Average TFLOPs: 3.093925
+>> VLA-Cache inference mode
+Current CUDA latency: 320.492523 ms | Average CUDA latency: 338.315399 ms, Average TFLOPs: 3.090111
+>> VLA-Cache inference mode
+Current CUDA latency: 142.225540 ms | Average CUDA latency: 324.308980 ms, Average TFLOPs: 3.084349
+>> VLA-Cache inference mode
+Current CUDA latency: 185.878174 ms | Average CUDA latency: 315.080260 ms, Average TFLOPs: 3.081933
+>> VLA-Cache inference mode
+Current CUDA latency: 117.506973 ms | Average CUDA latency: 302.731929 ms, Average TFLOPs: 3.076928
+>> VLA-Cache inference mode
+Current CUDA latency: 129.312546 ms | Average CUDA latency: 292.530789 ms, Average TFLOPs: 3.065005
+>> VLA-Cache inference mode
+Current CUDA latency: 151.454330 ms | Average CUDA latency: 284.693208 ms, Average TFLOPs: 3.054756
+>> VLA-Cache inference mode
+Current CUDA latency: 245.839554 ms | Average CUDA latency: 282.648279 ms, Average TFLOPs: 3.047553
+>> VLA-Cache inference mode
+Current CUDA latency: 130.087357 ms | Average CUDA latency: 275.020233 ms, Average TFLOPs: 3.041868
+Average time per step: 720.1298 ms, Control Frequency: 11.11 Hz, Token Reusing Ratio (Primary): 33.20 %, , Token Reusing Ratio (Wrist): 31.97 %
+Saved rollout MP4 at path ./rollouts/2026_03_22/primary--2026_03_22-23_44_14--episode=2--success=True--task=pick_up_the_black_bowl_between_the_plate_and_the_r.mp4
+Saved rollout MP4 at path ./rollouts/2026_03_22/wrist--2026_03_22-23_44_14--episode=2--success=True--task=pick_up_the_black_bowl_between_the_plate_and_the_r.mp4
+03/22 [23:46:30] INFO     | >> Success: True              run_libero_eval.py:230
+                 INFO     | >> # episodes completed so    run_libero_eval.py:230
+                          far: 2                                                
+                 INFO     | >> # successes: 2 (100.0%)    run_libero_eval.py:230
+
+ 67%|██████▋   | 2/3 [01:58<00:58, 58.56s/it][A                 INFO     | >>                            run_libero_eval.py:230
+                          Task: pick up the black bowl                          
+                          between the plate and the                             
+                          ramekin and place it on the                           
+                          plate                                                 
+                 INFO     | >> Starting episode 3...      run_libero_eval.py:230
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+>> VLA-Cache inference mode
+Current CUDA latency: 383.324524 ms | Average CUDA latency: 280.177580 ms, Average TFLOPs: 3.076210
+>> VLA-Cache inference mode
+Current CUDA latency: 331.035675 ms | Average CUDA latency: 282.489312 ms, Average TFLOPs: 3.073558
+>> VLA-Cache inference mode
+Current CUDA latency: 229.456955 ms | Average CUDA latency: 280.183557 ms, Average TFLOPs: 3.070332
+>> VLA-Cache inference mode
+Current CUDA latency: 221.325699 ms | Average CUDA latency: 277.731146 ms, Average TFLOPs: 3.067269
+>> VLA-Cache inference mode
+Current CUDA latency: 120.322624 ms | Average CUDA latency: 271.434805 ms, Average TFLOPs: 3.063745
+>> VLA-Cache inference mode
+Current CUDA latency: 119.234718 ms | Average CUDA latency: 265.580956 ms, Average TFLOPs: 3.059345
+>> VLA-Cache inference mode
+Current CUDA latency: 120.653954 ms | Average CUDA latency: 260.213289 ms, Average TFLOPs: 3.051191
+>> VLA-Cache inference mode
+Current CUDA latency: 234.523712 ms | Average CUDA latency: 259.295804 ms, Average TFLOPs: 3.042683
+>> VLA-Cache inference mode
+Current CUDA latency: 487.197113 ms | Average CUDA latency: 267.154470 ms, Average TFLOPs: 3.039349
+>> VLA-Cache inference mode
+Current CUDA latency: 124.415550 ms | Average CUDA latency: 262.396506 ms, Average TFLOPs: 3.036489
+>> VLA-Cache inference mode
+Current CUDA latency: 214.687592 ms | Average CUDA latency: 260.857509 ms, Average TFLOPs: 3.033950
+Average time per step: 700.2643 ms, Control Frequency: 11.42 Hz, Token Reusing Ratio (Primary): 32.95 %, , Token Reusing Ratio (Wrist): 32.65 %
+Saved rollout MP4 at path ./rollouts/2026_03_22/primary--2026_03_22-23_44_14--episode=3--success=True--task=pick_up_the_black_bowl_between_the_plate_and_the_r.mp4
+Saved rollout MP4 at path ./rollouts/2026_03_22/wrist--2026_03_22-23_44_14--episode=3--success=True--task=pick_up_the_black_bowl_between_the_plate_and_the_r.mp4
+03/22 [23:47:26] INFO     | >> Success: True              run_libero_eval.py:230
+                 INFO     | >> # episodes completed so    run_libero_eval.py:230
+                          far: 3                                                
+                 INFO     | >> # successes: 3 (100.0%)    run_libero_eval.py:230
+
+100%|██████████| 3/3 [02:55<00:00, 57.79s/it][A100%|██████████| 3/3 [02:55<00:00, 58.43s/it]
+                 INFO     | >> Current task success rate: run_libero_eval.py:230
+                          1.0                                                   
+                 INFO     | >> Current total success      run_libero_eval.py:230
+                          rate: 1.0                                             
+ 10%|█         | 1/10 [02:58<26:44, 178.30s/it][Warning]: datasets path /root/sj-tmp/workspace/LIBERO/libero/libero/../datasets does not exist!
+                 INFO     | >> Using default initial      run_libero_eval.py:230
+                          states                                                
+[Warning]: datasets path /root/sj-tmp/workspace/LIBERO/libero/libero/../datasets does not exist!
+
+  0%|          | 0/3 [00:00<?, ?it/s][A03/22 [23:47:29] INFO     | >>                            run_libero_eval.py:230
+                          Task: pick up the black bowl                          
+                          next to the ramekin and place                         
+                          it on the plate                                       
+                 INFO     | >> Starting episode 1...      run_libero_eval.py:230
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+>> VLA-Cache inference mode
+Current CUDA latency: 287.119843 ms | Average CUDA latency: 261.678207 ms, Average TFLOPs: 3.056336
+>> VLA-Cache inference mode
+Current CUDA latency: 303.760406 ms | Average CUDA latency: 262.953425 ms, Average TFLOPs: 3.054724
+>> VLA-Cache inference mode
+Current CUDA latency: 233.870621 ms | Average CUDA latency: 262.098048 ms, Average TFLOPs: 3.051180
+>> VLA-Cache inference mode
+Current CUDA latency: 170.813095 ms | Average CUDA latency: 259.489907 ms, Average TFLOPs: 3.049447
+>> VLA-Cache inference mode
+Current CUDA latency: 141.673798 ms | Average CUDA latency: 256.217237 ms, Average TFLOPs: 3.046433
+>> VLA-Cache inference mode
+Current CUDA latency: 115.613571 ms | Average CUDA latency: 252.417138 ms, Average TFLOPs: 3.042992
+>> VLA-Cache inference mode
+Current CUDA latency: 112.491074 ms | Average CUDA latency: 248.734873 ms, Average TFLOPs: 3.038153
+>> VLA-Cache inference mode
+Current CUDA latency: 289.288269 ms | Average CUDA latency: 249.774704 ms, Average TFLOPs: 3.034982
+>> VLA-Cache inference mode
+Current CUDA latency: 134.722595 ms | Average CUDA latency: 246.898401 ms, Average TFLOPs: 3.031476
+>> VLA-Cache inference mode
+Current CUDA latency: 108.740227 ms | Average CUDA latency: 243.528690 ms, Average TFLOPs: 3.027364
+>> VLA-Cache inference mode
+Current CUDA latency: 180.693466 ms | Average CUDA latency: 242.032613 ms, Average TFLOPs: 3.023398
+>> VLA-Cache inference mode
+Current CUDA latency: 248.899811 ms | Average CUDA latency: 242.192315 ms, Average TFLOPs: 3.020836
+>> VLA-Cache inference mode
+Current CUDA latency: 188.652512 ms | Average CUDA latency: 240.975501 ms, Average TFLOPs: 3.017551
+Average time per step: 535.9205 ms, Control Frequency: 14.93 Hz, Token Reusing Ratio (Primary): 34.86 %, , Token Reusing Ratio (Wrist): 34.65 %
+Saved rollout MP4 at path ./rollouts/2026_03_22/primary--2026_03_22-23_44_14--episode=4--success=True--task=pick_up_the_black_bowl_next_to_the_ramekin_and_pla.mp4
+Saved rollout MP4 at path ./rollouts/2026_03_22/wrist--2026_03_22-23_44_14--episode=4--success=True--task=pick_up_the_black_bowl_next_to_the_ramekin_and_pla.mp4
+03/22 [23:48:32] INFO     | >> Success: True              run_libero_eval.py:230
+                 INFO     | >> # episodes completed so    run_libero_eval.py:230
+                          far: 4                                                
+                 INFO     | >> # successes: 4 (100.0%)    run_libero_eval.py:230
+
+ 33%|███▎      | 1/3 [01:03<02:07, 63.64s/it][A                 INFO     | >>                            run_libero_eval.py:230
+                          Task: pick up the black bowl                          
+                          next to the ramekin and place                         
+                          it on the plate                                       
+                 INFO     | >> Starting episode 2...      run_libero_eval.py:230
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+>> VLA-Cache inference mode
+Current CUDA latency: 434.923737 ms | Average CUDA latency: 245.285462 ms, Average TFLOPs: 3.033835
+>> VLA-Cache inference mode
+Current CUDA latency: 338.057678 ms | Average CUDA latency: 247.302249 ms, Average TFLOPs: 3.032921
+>> VLA-Cache inference mode
+Current CUDA latency: 119.791229 ms | Average CUDA latency: 244.589249 ms, Average TFLOPs: 3.032126
+>> VLA-Cache inference mode
+Current CUDA latency: 120.847008 ms | Average CUDA latency: 242.011286 ms, Average TFLOPs: 3.030786
+>> VLA-Cache inference mode
+Current CUDA latency: 147.453094 ms | Average CUDA latency: 240.081527 ms, Average TFLOPs: 3.030299
+>> VLA-Cache inference mode
+Current CUDA latency: 118.038467 ms | Average CUDA latency: 237.640665 ms, Average TFLOPs: 3.029175
+>> VLA-Cache inference mode
+Current CUDA latency: 122.589119 ms | Average CUDA latency: 235.384753 ms, Average TFLOPs: 3.027528
+>> VLA-Cache inference mode
+Current CUDA latency: 223.035553 ms | Average CUDA latency: 235.147268 ms, Average TFLOPs: 3.026747
+>> VLA-Cache inference mode
+Current CUDA latency: 263.078522 ms | Average CUDA latency: 235.674273 ms, Average TFLOPs: 3.025270
+>> VLA-Cache inference mode
+Current CUDA latency: 187.263687 ms | Average CUDA latency: 234.777781 ms, Average TFLOPs: 3.022504
+>> VLA-Cache inference mode
+Current CUDA latency: 114.023972 ms | Average CUDA latency: 232.582257 ms, Average TFLOPs: 3.021006
+>> VLA-Cache inference mode
+Current CUDA latency: 133.776291 ms | Average CUDA latency: 230.817865 ms, Average TFLOPs: 3.019959
+>> VLA-Cache inference mode
+Current CUDA latency: 112.836098 ms | Average CUDA latency: 228.748009 ms, Average TFLOPs: 3.017917
+Average time per step: 538.0676 ms, Control Frequency: 14.87 Hz, Token Reusing Ratio (Primary): 34.28 %, , Token Reusing Ratio (Wrist): 33.83 %
+Saved rollout MP4 at path ./rollouts/2026_03_22/primary--2026_03_22-23_44_14--episode=5--success=True--task=pick_up_the_black_bowl_next_to_the_ramekin_and_pla.mp4
+Saved rollout MP4 at path ./rollouts/2026_03_22/wrist--2026_03_22-23_44_14--episode=5--success=True--task=pick_up_the_black_bowl_next_to_the_ramekin_and_pla.mp4
+03/22 [23:49:36] INFO     | >> Success: True              run_libero_eval.py:230
+                 INFO     | >> # episodes completed so    run_libero_eval.py:230
+                          far: 5                                                
+                 INFO     | >> # successes: 5 (100.0%)    run_libero_eval.py:230
+
+ 67%|██████▋   | 2/3 [02:06<01:03, 63.37s/it][A                 INFO     | >>                            run_libero_eval.py:230
+                          Task: pick up the black bowl                          
+                          next to the ramekin and place                         
+                          it on the plate                                       
+                 INFO     | >> Starting episode 3...      run_libero_eval.py:230
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+>> VLA-Cache inference mode
+Current CUDA latency: 350.520477 ms | Average CUDA latency: 230.847534 ms, Average TFLOPs: 3.030544
+>> VLA-Cache inference mode
+Current CUDA latency: 299.472717 ms | Average CUDA latency: 232.010673 ms, Average TFLOPs: 3.029709
+>> VLA-Cache inference mode
+Current CUDA latency: 159.809402 ms | Average CUDA latency: 230.807318 ms, Average TFLOPs: 3.028783
+>> VLA-Cache inference mode
+Current CUDA latency: 270.396881 ms | Average CUDA latency: 231.456328 ms, Average TFLOPs: 3.028266
+>> VLA-Cache inference mode
+Current CUDA latency: 251.916611 ms | Average CUDA latency: 231.786332 ms, Average TFLOPs: 3.027698
+>> VLA-Cache inference mode
+Current CUDA latency: 141.278915 ms | Average CUDA latency: 230.349707 ms, Average TFLOPs: 3.025988
+>> VLA-Cache inference mode
+Current CUDA latency: 243.839813 ms | Average CUDA latency: 230.560490 ms, Average TFLOPs: 3.024659
+>> VLA-Cache inference mode
+Current CUDA latency: 239.238113 ms | Average CUDA latency: 230.693991 ms, Average TFLOPs: 3.023856
+>> VLA-Cache inference mode
+Current CUDA latency: 148.393890 ms | Average CUDA latency: 229.447020 ms, Average TFLOPs: 3.022612
+>> VLA-Cache inference mode
+Current CUDA latency: 268.703400 ms | Average CUDA latency: 230.032936 ms, Average TFLOPs: 3.021024
+>> VLA-Cache inference mode
+Current CUDA latency: 148.368866 ms | Average CUDA latency: 228.831994 ms, Average TFLOPs: 3.019716
+>> VLA-Cache inference mode
+Current CUDA latency: 122.773567 ms | Average CUDA latency: 227.294915 ms, Average TFLOPs: 3.018337
+>> VLA-Cache inference mode
+Current CUDA latency: 180.814590 ms | Average CUDA latency: 226.630911 ms, Average TFLOPs: 3.017790
+>> VLA-Cache inference mode
+Current CUDA latency: 210.756317 ms | Average CUDA latency: 226.407325 ms, Average TFLOPs: 3.016589
+Average time per step: 553.5109 ms, Control Frequency: 14.45 Hz, Token Reusing Ratio (Primary): 33.96 %, , Token Reusing Ratio (Wrist): 33.89 %
+Saved rollout MP4 at path ./rollouts/2026_03_22/primary--2026_03_22-23_44_14--episode=6--success=True--task=pick_up_the_black_bowl_next_to_the_ramekin_and_pla.mp4
+Saved rollout MP4 at path ./rollouts/2026_03_22/wrist--2026_03_22-23_44_14--episode=6--success=True--task=pick_up_the_black_bowl_next_to_the_ramekin_and_pla.mp4
+03/22 [23:50:46] INFO     | >> Success: True              run_libero_eval.py:230
+                 INFO     | >> # episodes completed so    run_libero_eval.py:230
+                          far: 6                                                
+                 INFO     | >> # successes: 6 (100.0%)    run_libero_eval.py:230
+
+100%|██████████| 3/3 [03:17<00:00, 66.70s/it][A100%|██████████| 3/3 [03:17<00:00, 65.83s/it]
+                 INFO     | >> Current task success rate: run_libero_eval.py:230
+                          1.0                                                   
+                 INFO     | >> Current total success      run_libero_eval.py:230
+                          rate: 1.0                                             
+ 20%|██        | 2/10 [06:18<25:27, 190.90s/it][Warning]: datasets path /root/sj-tmp/workspace/LIBERO/libero/libero/../datasets does not exist!
+                 INFO     | >> Using default initial      run_libero_eval.py:230
+                          states                                                
+[Warning]: datasets path /root/sj-tmp/workspace/LIBERO/libero/libero/../datasets does not exist!
+
+  0%|          | 0/3 [00:00<?, ?it/s][A03/22 [23:50:49] INFO     | >>                            run_libero_eval.py:230
+                          Task: pick up the black bowl                          
+                          from table center and place it                        
+                          on the plate                                          
+                 INFO     | >> Starting episode 1...      run_libero_eval.py:230
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+>> VLA-Cache inference mode
+Current CUDA latency: 277.833801 ms | Average CUDA latency: 227.121582 ms, Average TFLOPs: 3.026515
+>> VLA-Cache inference mode
+Current CUDA latency: 310.285828 ms | Average CUDA latency: 228.260818 ms, Average TFLOPs: 3.026033
+>> VLA-Cache inference mode
+Current CUDA latency: 124.332291 ms | Average CUDA latency: 226.856378 ms, Average TFLOPs: 3.025405
+>> VLA-Cache inference mode
+Current CUDA latency: 114.407265 ms | Average CUDA latency: 225.357057 ms, Average TFLOPs: 3.024329
+>> VLA-Cache inference mode
+Current CUDA latency: 230.410843 ms | Average CUDA latency: 225.423554 ms, Average TFLOPs: 3.023332
+>> VLA-Cache inference mode
+Current CUDA latency: 219.278305 ms | Average CUDA latency: 225.343746 ms, Average TFLOPs: 3.022054
+>> VLA-Cache inference mode
+Current CUDA latency: 124.341469 ms | Average CUDA latency: 224.048845 ms, Average TFLOPs: 3.020583
+>> VLA-Cache inference mode
+Current CUDA latency: 114.490593 ms | Average CUDA latency: 222.662031 ms, Average TFLOPs: 3.018507
+>> VLA-Cache inference mode
+Current CUDA latency: 101.896194 ms | Average CUDA latency: 221.152458 ms, Average TFLOPs: 3.016404
+>> VLA-Cache inference mode
+Current CUDA latency: 109.922974 ms | Average CUDA latency: 219.779255 ms, Average TFLOPs: 3.013876
+>> VLA-Cache inference mode
+Current CUDA latency: 111.187553 ms | Average CUDA latency: 218.454966 ms, Average TFLOPs: 3.011631
+>> VLA-Cache inference mode
+Current CUDA latency: 161.832611 ms | Average CUDA latency: 217.772769 ms, Average TFLOPs: 3.009757
+Average time per step: 496.0775 ms, Control Frequency: 16.13 Hz, Token Reusing Ratio (Primary): 35.45 %, , Token Reusing Ratio (Wrist): 32.23 %
+Saved rollout MP4 at path ./rollouts/2026_03_22/primary--2026_03_22-23_44_14--episode=7--success=True--task=pick_up_the_black_bowl_from_table_center_and_place.mp4
+Saved rollout MP4 at path ./rollouts/2026_03_22/wrist--2026_03_22-23_44_14--episode=7--success=True--task=pick_up_the_black_bowl_from_table_center_and_place.mp4
+03/22 [23:51:47] INFO     | >> Success: True              run_libero_eval.py:230
+                 INFO     | >> # episodes completed so    run_libero_eval.py:230
+                          far: 7                                                
+                 INFO     | >> # successes: 7 (100.0%)    run_libero_eval.py:230
+
+ 33%|███▎      | 1/3 [00:58<01:57, 58.84s/it][A                 INFO     | >>                            run_libero_eval.py:230
+                          Task: pick up the black bowl                          
+                          from table center and place it                        
+                          on the plate                                          
+                 INFO     | >> Starting episode 2...      run_libero_eval.py:230
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+>> VLA-Cache inference mode
+Current CUDA latency: 335.494232 ms | Average CUDA latency: 219.174215 ms, Average TFLOPs: 3.018346
+>> VLA-Cache inference mode
+Current CUDA latency: 272.170135 ms | Average CUDA latency: 219.797696 ms, Average TFLOPs: 3.018612
+>> VLA-Cache inference mode
+Current CUDA latency: 119.972992 ms | Average CUDA latency: 218.636944 ms, Average TFLOPs: 3.018686
+>> VLA-Cache inference mode
+Current CUDA latency: 177.994751 ms | Average CUDA latency: 218.169792 ms, Average TFLOPs: 3.018937
+>> VLA-Cache inference mode
+Current CUDA latency: 133.718979 ms | Average CUDA latency: 217.210124 ms, Average TFLOPs: 3.018595
+>> VLA-Cache inference mode
+Current CUDA latency: 505.980194 ms | Average CUDA latency: 220.454731 ms, Average TFLOPs: 3.017944
+>> VLA-Cache inference mode
+Current CUDA latency: 148.132706 ms | Average CUDA latency: 219.651153 ms, Average TFLOPs: 3.016277
+>> VLA-Cache inference mode
+Current CUDA latency: 121.416290 ms | Average CUDA latency: 218.571649 ms, Average TFLOPs: 3.014679
+>> VLA-Cache inference mode
+Current CUDA latency: 126.421791 ms | Average CUDA latency: 217.570020 ms, Average TFLOPs: 3.013001
+>> VLA-Cache inference mode
+Current CUDA latency: 111.479454 ms | Average CUDA latency: 216.429262 ms, Average TFLOPs: 3.011306
+>> VLA-Cache inference mode
+Current CUDA latency: 237.849731 ms | Average CUDA latency: 216.657139 ms, Average TFLOPs: 3.009687
+>> VLA-Cache inference mode
+Current CUDA latency: 178.366333 ms | Average CUDA latency: 216.254078 ms, Average TFLOPs: 3.007969
+Average time per step: 531.3546 ms, Control Frequency: 15.06 Hz, Token Reusing Ratio (Primary): 33.97 %, , Token Reusing Ratio (Wrist): 32.16 %
+Saved rollout MP4 at path ./rollouts/2026_03_22/primary--2026_03_22-23_44_14--episode=8--success=True--task=pick_up_the_black_bowl_from_table_center_and_place.mp4
+Saved rollout MP4 at path ./rollouts/2026_03_22/wrist--2026_03_22-23_44_14--episode=8--success=True--task=pick_up_the_black_bowl_from_table_center_and_place.mp4
+03/22 [23:52:50] INFO     | >> Success: True              run_libero_eval.py:230
+                 INFO     | >> # episodes completed so    run_libero_eval.py:230
+                          far: 8                                                
+                 INFO     | >> # successes: 8 (100.0%)    run_libero_eval.py:230
+
+ 67%|██████▋   | 2/3 [02:01<01:01, 61.09s/it][A                 INFO     | >>                            run_libero_eval.py:230
+                          Task: pick up the black bowl                          
+                          from table center and place it                        
+                          on the plate                                          
+                 INFO     | >> Starting episode 3...      run_libero_eval.py:230
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+>> VLA-Cache inference mode
+Current CUDA latency: 304.439423 ms | Average CUDA latency: 217.172675 ms, Average TFLOPs: 3.015503
+>> VLA-Cache inference mode
+Current CUDA latency: 284.978119 ms | Average CUDA latency: 217.871700 ms, Average TFLOPs: 3.015600
+>> VLA-Cache inference mode
+Current CUDA latency: 122.928093 ms | Average CUDA latency: 216.902888 ms, Average TFLOPs: 3.015357
+>> VLA-Cache inference mode
+Current CUDA latency: 116.102882 ms | Average CUDA latency: 215.884706 ms, Average TFLOPs: 3.015276
+>> VLA-Cache inference mode
+Current CUDA latency: 401.434113 ms | Average CUDA latency: 217.740200 ms, Average TFLOPs: 3.014734
+>> VLA-Cache inference mode
+Current CUDA latency: 273.714203 ms | Average CUDA latency: 218.294398 ms, Average TFLOPs: 3.014236
+>> VLA-Cache inference mode
+Current CUDA latency: 123.079071 ms | Average CUDA latency: 217.360915 ms, Average TFLOPs: 3.013098
+>> VLA-Cache inference mode
+Current CUDA latency: 127.699875 ms | Average CUDA latency: 216.490419 ms, Average TFLOPs: 3.011118
+>> VLA-Cache inference mode
+Current CUDA latency: 109.983139 ms | Average CUDA latency: 215.466311 ms, Average TFLOPs: 3.009350
+>> VLA-Cache inference mode
+Current CUDA latency: 107.329407 ms | Average CUDA latency: 214.436435 ms, Average TFLOPs: 3.007763
+>> VLA-Cache inference mode
+Current CUDA latency: 142.354782 ms | Average CUDA latency: 213.756420 ms, Average TFLOPs: 3.006365
+>> VLA-Cache inference mode
+Current CUDA latency: 110.858688 ms | Average CUDA latency: 212.794759 ms, Average TFLOPs: 3.004518
+>> VLA-Cache inference mode
+Current CUDA latency: 203.799652 ms | Average CUDA latency: 212.711471 ms, Average TFLOPs: 3.002791
+Average time per step: 525.7421 ms, Control Frequency: 15.22 Hz, Token Reusing Ratio (Primary): 33.98 %, , Token Reusing Ratio (Wrist): 32.85 %
+Saved rollout MP4 at path ./rollouts/2026_03_22/primary--2026_03_22-23_44_14--episode=9--success=True--task=pick_up_the_black_bowl_from_table_center_and_place.mp4
+Saved rollout MP4 at path ./rollouts/2026_03_22/wrist--2026_03_22-23_44_14--episode=9--success=True--task=pick_up_the_black_bowl_from_table_center_and_place.mp4
+03/22 [23:53:53] INFO     | >> Success: True              run_libero_eval.py:230
+                 INFO     | >> # episodes completed so    run_libero_eval.py:230
+                          far: 9                                                
+                 INFO     | >> # successes: 9 (100.0%)    run_libero_eval.py:230
+
+100%|██████████| 3/3 [03:04<00:00, 61.75s/it][A100%|██████████| 3/3 [03:04<00:00, 61.35s/it]
+                 INFO     | >> Current task success rate: run_libero_eval.py:230
+                          1.0                                                   
+                 INFO     | >> Current total success      run_libero_eval.py:230
+                          rate: 1.0                                             
+ 30%|███       | 3/10 [09:24<22:01, 188.83s/it][Warning]: datasets path /root/sj-tmp/workspace/LIBERO/libero/libero/../datasets does not exist!
+                 INFO     | >> Using default initial      run_libero_eval.py:230
+                          states                                                
+[Warning]: datasets path /root/sj-tmp/workspace/LIBERO/libero/libero/../datasets does not exist!
+
+  0%|          | 0/3 [00:00<?, ?it/s][A03/22 [23:53:55] INFO     | >>                            run_libero_eval.py:230
+                          Task: pick up the black bowl on                       
+                          the cookie box and place it on                        
+                          the plate                                             
+                 INFO     | >> Starting episode 1...      run_libero_eval.py:230
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+>> VLA-Cache inference mode
+Current CUDA latency: 358.603485 ms | Average CUDA latency: 214.049930 ms, Average TFLOPs: 3.009532
+>> VLA-Cache inference mode
+Current CUDA latency: 289.388092 ms | Average CUDA latency: 214.734822 ms, Average TFLOPs: 3.009271
+>> VLA-Cache inference mode
+Current CUDA latency: 118.234787 ms | Average CUDA latency: 213.865452 ms, Average TFLOPs: 3.009167
+>> VLA-Cache inference mode
+Current CUDA latency: 117.863396 ms | Average CUDA latency: 213.008291 ms, Average TFLOPs: 3.009297
+>> VLA-Cache inference mode
+Current CUDA latency: 204.402908 ms | Average CUDA latency: 212.932137 ms, Average TFLOPs: 3.008915
+>> VLA-Cache inference mode
+Current CUDA latency: 215.011230 ms | Average CUDA latency: 212.950375 ms, Average TFLOPs: 3.007740
+>> VLA-Cache inference mode
+Current CUDA latency: 122.610016 ms | Average CUDA latency: 212.164807 ms, Average TFLOPs: 3.005933
+>> VLA-Cache inference mode
+Current CUDA latency: 110.554718 ms | Average CUDA latency: 211.288857 ms, Average TFLOPs: 3.003901
+>> VLA-Cache inference mode
+Current CUDA latency: 112.346336 ms | Average CUDA latency: 210.443195 ms, Average TFLOPs: 3.002090
+>> VLA-Cache inference mode
+Current CUDA latency: 108.819138 ms | Average CUDA latency: 209.581974 ms, Average TFLOPs: 3.000797
+Average time per step: 518.6103 ms, Control Frequency: 15.43 Hz, Token Reusing Ratio (Primary): 33.40 %, , Token Reusing Ratio (Wrist): 33.12 %
+Saved rollout MP4 at path ./rollouts/2026_03_22/primary--2026_03_22-23_44_14--episode=10--success=True--task=pick_up_the_black_bowl_on_the_cookie_box_and_place.mp4
+Saved rollout MP4 at path ./rollouts/2026_03_22/wrist--2026_03_22-23_44_14--episode=10--success=True--task=pick_up_the_black_bowl_on_the_cookie_box_and_place.mp4
+03/22 [23:54:45] INFO     | >> Success: True              run_libero_eval.py:230
+                 INFO     | >> # episodes completed so    run_libero_eval.py:230
+                          far: 10                                               
+                 INFO     | >> # successes: 10 (100.0%)   run_libero_eval.py:230
+
+ 33%|███▎      | 1/3 [00:50<01:41, 50.57s/it][A                 INFO     | >>                            run_libero_eval.py:230
+                          Task: pick up the black bowl on                       
+                          the cookie box and place it on                        
+                          the plate                                             
+                 INFO     | >> Starting episode 2...      run_libero_eval.py:230
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+>> VLA-Cache inference mode
+Current CUDA latency: 384.292114 ms | Average CUDA latency: 211.050127 ms, Average TFLOPs: 3.006988
+>> VLA-Cache inference mode
+Current CUDA latency: 305.718353 ms | Average CUDA latency: 211.839028 ms, Average TFLOPs: 3.006498
+>> VLA-Cache inference mode
+Current CUDA latency: 125.382530 ms | Average CUDA latency: 211.124512 ms, Average TFLOPs: 3.006477
+>> VLA-Cache inference mode
+Current CUDA latency: 151.305756 ms | Average CUDA latency: 210.634194 ms, Average TFLOPs: 3.006587
+>> VLA-Cache inference mode
+Current CUDA latency: 225.345627 ms | Average CUDA latency: 210.753799 ms, Average TFLOPs: 3.006279
+>> VLA-Cache inference mode
+Current CUDA latency: 187.794586 ms | Average CUDA latency: 210.568644 ms, Average TFLOPs: 3.005691
+>> VLA-Cache inference mode
+Current CUDA latency: 114.382240 ms | Average CUDA latency: 209.799153 ms, Average TFLOPs: 3.004323
+>> VLA-Cache inference mode
+Current CUDA latency: 119.094017 ms | Average CUDA latency: 209.079271 ms, Average TFLOPs: 3.002605
+>> VLA-Cache inference mode
+Current CUDA latency: 113.827293 ms | Average CUDA latency: 208.329256 ms, Average TFLOPs: 3.001122
+>> VLA-Cache inference mode
+Current CUDA latency: 134.824448 ms | Average CUDA latency: 207.754999 ms, Average TFLOPs: 3.000134
+>> VLA-Cache inference mode
+Current CUDA latency: 274.196625 ms | Average CUDA latency: 208.270051 ms, Average TFLOPs: 2.999369
+Average time per step: 525.5645 ms, Control Frequency: 15.22 Hz, Token Reusing Ratio (Primary): 32.92 %, , Token Reusing Ratio (Wrist): 33.39 %
+Saved rollout MP4 at path ./rollouts/2026_03_22/primary--2026_03_22-23_44_14--episode=11--success=True--task=pick_up_the_black_bowl_on_the_cookie_box_and_place.mp4
+Saved rollout MP4 at path ./rollouts/2026_03_22/wrist--2026_03_22-23_44_14--episode=11--success=True--task=pick_up_the_black_bowl_on_the_cookie_box_and_place.mp4
+03/22 [23:55:40] INFO     | >> Success: True              run_libero_eval.py:230
+                 INFO     | >> # episodes completed so    run_libero_eval.py:230
+                          far: 11                                               
+                 INFO     | >> # successes: 11 (100.0%)   run_libero_eval.py:230
+
+ 67%|██████▋   | 2/3 [01:44<00:52, 52.75s/it][A                 INFO     | >>                            run_libero_eval.py:230
+                          Task: pick up the black bowl on                       
+                          the cookie box and place it on                        
+                          the plate                                             
+                 INFO     | >> Starting episode 3...      run_libero_eval.py:230
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+>> VLA-Cache inference mode
+Current CUDA latency: 319.575897 ms | Average CUDA latency: 209.126249 ms, Average TFLOPs: 3.005048
+>> VLA-Cache inference mode
+Current CUDA latency: 274.618561 ms | Average CUDA latency: 209.626191 ms, Average TFLOPs: 3.005030
+>> VLA-Cache inference mode
+Current CUDA latency: 121.067101 ms | Average CUDA latency: 208.955289 ms, Average TFLOPs: 3.005047
+>> VLA-Cache inference mode
+Current CUDA latency: 127.261665 ms | Average CUDA latency: 208.341051 ms, Average TFLOPs: 3.004932
+>> VLA-Cache inference mode
+Current CUDA latency: 264.473358 ms | Average CUDA latency: 208.759949 ms, Average TFLOPs: 3.004441
+>> VLA-Cache inference mode
+Current CUDA latency: 224.957184 ms | Average CUDA latency: 208.879928 ms, Average TFLOPs: 3.003498
+>> VLA-Cache inference mode
+Current CUDA latency: 123.977600 ms | Average CUDA latency: 208.255646 ms, Average TFLOPs: 3.002221
+>> VLA-Cache inference mode
+Current CUDA latency: 116.506332 ms | Average CUDA latency: 207.585943 ms, Average TFLOPs: 3.000194
+>> VLA-Cache inference mode
+Current CUDA latency: 109.423523 ms | Average CUDA latency: 206.874621 ms, Average TFLOPs: 2.998424
+>> VLA-Cache inference mode
+Current CUDA latency: 108.098656 ms | Average CUDA latency: 206.164003 ms, Average TFLOPs: 2.996662
+>> VLA-Cache inference mode
+Current CUDA latency: 107.670494 ms | Average CUDA latency: 205.460478 ms, Average TFLOPs: 2.995488
+Average time per step: 518.6919 ms, Control Frequency: 15.42 Hz, Token Reusing Ratio (Primary): 33.22 %, , Token Reusing Ratio (Wrist): 33.73 %
+Saved rollout MP4 at path ./rollouts/2026_03_22/primary--2026_03_22-23_44_14--episode=12--success=True--task=pick_up_the_black_bowl_on_the_cookie_box_and_place.mp4
+Saved rollout MP4 at path ./rollouts/2026_03_22/wrist--2026_03_22-23_44_14--episode=12--success=True--task=pick_up_the_black_bowl_on_the_cookie_box_and_place.mp4
+03/22 [23:56:33] INFO     | >> Success: True              run_libero_eval.py:230
+                 INFO     | >> # episodes completed so    run_libero_eval.py:230
+                          far: 12                                               
+                 INFO     | >> # successes: 12 (100.0%)   run_libero_eval.py:230
+
+100%|██████████| 3/3 [02:37<00:00, 52.83s/it][A100%|██████████| 3/3 [02:37<00:00, 52.59s/it]
+                 INFO     | >> Current task success rate: run_libero_eval.py:230
+                          1.0                                                   
+                 INFO     | >> Current total success      run_libero_eval.py:230
+                          rate: 1.0                                             
+ 40%|████      | 4/10 [12:04<17:44, 177.46s/it][Warning]: datasets path /root/sj-tmp/workspace/LIBERO/libero/libero/../datasets does not exist!
+                 INFO     | >> Using default initial      run_libero_eval.py:230
+                          states                                                
+[Warning]: datasets path /root/sj-tmp/workspace/LIBERO/libero/libero/../datasets does not exist!
+
+  0%|          | 0/3 [00:00<?, ?it/s][A03/22 [23:56:35] INFO     | >>                            run_libero_eval.py:230
+                          Task: pick up the black bowl in                       
+                          the top drawer of the wooden                          
+                          cabinet and place it on the                           
+                          plate                                                 
+                 INFO     | >> Starting episode 1...      run_libero_eval.py:230
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+>> VLA-Cache inference mode
+Current CUDA latency: 333.287018 ms | Average CUDA latency: 206.367049 ms, Average TFLOPs: 3.000977
+>> VLA-Cache inference mode
+Current CUDA latency: 318.520721 ms | Average CUDA latency: 207.156864 ms, Average TFLOPs: 3.000874
+>> VLA-Cache inference mode
+Current CUDA latency: 130.862976 ms | Average CUDA latency: 206.623340 ms, Average TFLOPs: 3.000714
+>> VLA-Cache inference mode
+Current CUDA latency: 114.963806 ms | Average CUDA latency: 205.986815 ms, Average TFLOPs: 3.000795
+>> VLA-Cache inference mode
+Current CUDA latency: 114.363708 ms | Average CUDA latency: 205.354932 ms, Average TFLOPs: 3.000684
+>> VLA-Cache inference mode
+Current CUDA latency: 117.032448 ms | Average CUDA latency: 204.749983 ms, Average TFLOPs: 3.000834
+>> VLA-Cache inference mode
+Current CUDA latency: 158.040833 ms | Average CUDA latency: 204.432234 ms, Average TFLOPs: 3.000750
+>> VLA-Cache inference mode
+Current CUDA latency: 220.610886 ms | Average CUDA latency: 204.541549 ms, Average TFLOPs: 3.000434
+>> VLA-Cache inference mode
+Current CUDA latency: 128.271332 ms | Average CUDA latency: 204.029669 ms, Average TFLOPs: 2.999573
+>> VLA-Cache inference mode
+Current CUDA latency: 118.035072 ms | Average CUDA latency: 203.456371 ms, Average TFLOPs: 2.999043
+>> VLA-Cache inference mode
+Current CUDA latency: 142.884857 ms | Average CUDA latency: 203.055236 ms, Average TFLOPs: 2.998770
+>> VLA-Cache inference mode
+Current CUDA latency: 145.742874 ms | Average CUDA latency: 202.678180 ms, Average TFLOPs: 2.998727
+>> VLA-Cache inference mode
+Current CUDA latency: 268.192810 ms | Average CUDA latency: 203.106381 ms, Average TFLOPs: 2.998666
+>> VLA-Cache inference mode
+Current CUDA latency: 233.936157 ms | Average CUDA latency: 203.306574 ms, Average TFLOPs: 2.998474
+>> VLA-Cache inference mode
+Current CUDA latency: 159.587173 ms | Average CUDA latency: 203.024513 ms, Average TFLOPs: 2.998239
+>> VLA-Cache inference mode
+Current CUDA latency: 137.761185 ms | Average CUDA latency: 202.606159 ms, Average TFLOPs: 2.997608
+Average time per step: 529.1329 ms, Control Frequency: 15.12 Hz, Token Reusing Ratio (Primary): 35.25 %, , Token Reusing Ratio (Wrist): 33.08 %
+Saved rollout MP4 at path ./rollouts/2026_03_22/primary--2026_03_22-23_44_14--episode=13--success=True--task=pick_up_the_black_bowl_in_the_top_drawer_of_the_wo.mp4
+Saved rollout MP4 at path ./rollouts/2026_03_22/wrist--2026_03_22-23_44_14--episode=13--success=True--task=pick_up_the_black_bowl_in_the_top_drawer_of_the_wo.mp4
+03/22 [23:57:53] INFO     | >> Success: True              run_libero_eval.py:230
+                 INFO     | >> # episodes completed so    run_libero_eval.py:230
+                          far: 13                                               
+                 INFO     | >> # successes: 13 (100.0%)   run_libero_eval.py:230
+
+ 33%|███▎      | 1/3 [01:18<02:37, 78.50s/it][A                 INFO     | >>                            run_libero_eval.py:230
+                          Task: pick up the black bowl in                       
+                          the top drawer of the wooden                          
+                          cabinet and place it on the                           
+                          plate                                                 
+                 INFO     | >> Starting episode 2...      run_libero_eval.py:230
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+>> VLA-Cache inference mode
+Current CUDA latency: 316.060333 ms | Average CUDA latency: 203.328797 ms, Average TFLOPs: 3.002524
+>> VLA-Cache inference mode
+Current CUDA latency: 248.635773 ms | Average CUDA latency: 203.615550 ms, Average TFLOPs: 3.002557
+>> VLA-Cache inference mode
+Current CUDA latency: 123.973251 ms | Average CUDA latency: 203.114655 ms, Average TFLOPs: 3.002709
+>> VLA-Cache inference mode
+Current CUDA latency: 278.327515 ms | Average CUDA latency: 203.584735 ms, Average TFLOPs: 3.002862
+>> VLA-Cache inference mode
+Current CUDA latency: 216.946106 ms | Average CUDA latency: 203.667725 ms, Average TFLOPs: 3.003125
+>> VLA-Cache inference mode
+Current CUDA latency: 134.490112 ms | Average CUDA latency: 203.240703 ms, Average TFLOPs: 3.003185
+>> VLA-Cache inference mode
+Current CUDA latency: 125.398018 ms | Average CUDA latency: 202.763140 ms, Average TFLOPs: 3.002951
+>> VLA-Cache inference mode
+Current CUDA latency: 116.529793 ms | Average CUDA latency: 202.237327 ms, Average TFLOPs: 3.002893
+>> VLA-Cache inference mode
+Current CUDA latency: 122.630272 ms | Average CUDA latency: 201.754860 ms, Average TFLOPs: 3.002378
+>> VLA-Cache inference mode
+Current CUDA latency: 116.090080 ms | Average CUDA latency: 201.238807 ms, Average TFLOPs: 3.001786
+>> VLA-Cache inference mode
+Current CUDA latency: 114.514015 ms | Average CUDA latency: 200.719497 ms, Average TFLOPs: 3.001344
+>> VLA-Cache inference mode
+Current CUDA latency: 159.408325 ms | Average CUDA latency: 200.473597 ms, Average TFLOPs: 3.001516
+>> VLA-Cache inference mode
+Current CUDA latency: 196.149216 ms | Average CUDA latency: 200.448009 ms, Average TFLOPs: 3.001540
+>> VLA-Cache inference mode
+Current CUDA latency: 218.714233 ms | Average CUDA latency: 200.555458 ms, Average TFLOPs: 3.001587
+>> VLA-Cache inference mode
+Current CUDA latency: 131.218689 ms | Average CUDA latency: 200.149979 ms, Average TFLOPs: 3.001559
+>> VLA-Cache inference mode
+Current CUDA latency: 120.679779 ms | Average CUDA latency: 199.687943 ms, Average TFLOPs: 3.001110
+Average time per step: 512.6981 ms, Control Frequency: 15.60 Hz, Token Reusing Ratio (Primary): 34.36 %, , Token Reusing Ratio (Wrist): 33.04 %
+Saved rollout MP4 at path ./rollouts/2026_03_22/primary--2026_03_22-23_44_14--episode=14--success=True--task=pick_up_the_black_bowl_in_the_top_drawer_of_the_wo.mp4
+Saved rollout MP4 at path ./rollouts/2026_03_22/wrist--2026_03_22-23_44_14--episode=14--success=True--task=pick_up_the_black_bowl_in_the_top_drawer_of_the_wo.mp4
+03/22 [23:59:12] INFO     | >> Success: True              run_libero_eval.py:230
+                 INFO     | >> # episodes completed so    run_libero_eval.py:230
+                          far: 14                                               
+                 INFO     | >> # successes: 14 (100.0%)   run_libero_eval.py:230
+
+ 67%|██████▋   | 2/3 [02:37<01:18, 78.73s/it][A                 INFO     | >>                            run_libero_eval.py:230
+                          Task: pick up the black bowl in                       
+                          the top drawer of the wooden                          
+                          cabinet and place it on the                           
+                          plate                                                 
+                 INFO     | >> Starting episode 3...      run_libero_eval.py:230
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+>> VLA-Cache inference mode
+Current CUDA latency: 492.760132 ms | Average CUDA latency: 201.382002 ms, Average TFLOPs: 3.005551
+>> VLA-Cache inference mode
+Current CUDA latency: 270.956757 ms | Average CUDA latency: 201.781857 ms, Average TFLOPs: 3.005527
+>> VLA-Cache inference mode
+Current CUDA latency: 316.824982 ms | Average CUDA latency: 202.439247 ms, Average TFLOPs: 3.005550
+>> VLA-Cache inference mode
+Current CUDA latency: 288.133850 ms | Average CUDA latency: 202.926148 ms, Average TFLOPs: 3.005680
+>> VLA-Cache inference mode
+Current CUDA latency: 186.755173 ms | Average CUDA latency: 202.834786 ms, Average TFLOPs: 3.005713
+>> VLA-Cache inference mode
+Current CUDA latency: 140.338821 ms | Average CUDA latency: 202.483685 ms, Average TFLOPs: 3.006212
+>> VLA-Cache inference mode
+Current CUDA latency: 127.656960 ms | Average CUDA latency: 202.065659 ms, Average TFLOPs: 3.006418
+>> VLA-Cache inference mode
+Current CUDA latency: 119.085533 ms | Average CUDA latency: 201.604658 ms, Average TFLOPs: 3.006302
+>> VLA-Cache inference mode
+Current CUDA latency: 126.410812 ms | Average CUDA latency: 201.189223 ms, Average TFLOPs: 3.005978
+>> VLA-Cache inference mode
+Current CUDA latency: 135.168121 ms | Average CUDA latency: 200.826469 ms, Average TFLOPs: 3.005739
+>> VLA-Cache inference mode
+Current CUDA latency: 223.871490 ms | Average CUDA latency: 200.952398 ms, Average TFLOPs: 3.005418
+>> VLA-Cache inference mode
+Current CUDA latency: 187.427521 ms | Average CUDA latency: 200.878894 ms, Average TFLOPs: 3.005369
+>> VLA-Cache inference mode
+Current CUDA latency: 118.767906 ms | Average CUDA latency: 200.435050 ms, Average TFLOPs: 3.005248
+>> VLA-Cache inference mode
+Current CUDA latency: 267.972229 ms | Average CUDA latency: 200.798154 ms, Average TFLOPs: 3.004998
+>> VLA-Cache inference mode
+Current CUDA latency: 206.488831 ms | Average CUDA latency: 200.828585 ms, Average TFLOPs: 3.004626
+>> VLA-Cache inference mode
+Current CUDA latency: 164.895172 ms | Average CUDA latency: 200.637450 ms, Average TFLOPs: 3.004377
+Average time per step: 526.8580 ms, Control Frequency: 15.18 Hz, Token Reusing Ratio (Primary): 34.00 %, , Token Reusing Ratio (Wrist): 33.00 %
+Saved rollout MP4 at path ./rollouts/2026_03_22/primary--2026_03_22-23_44_14--episode=15--success=True--task=pick_up_the_black_bowl_in_the_top_drawer_of_the_wo.mp4
+Saved rollout MP4 at path ./rollouts/2026_03_22/wrist--2026_03_22-23_44_14--episode=15--success=True--task=pick_up_the_black_bowl_in_the_top_drawer_of_the_wo.mp4
+03/23 [00:00:31] INFO     | >> Success: True              run_libero_eval.py:230
+                 INFO     | >> # episodes completed so    run_libero_eval.py:230
+                          far: 15                                               
+                 INFO     | >> # successes: 15 (100.0%)   run_libero_eval.py:230
+
+100%|██████████| 3/3 [03:55<00:00, 78.61s/it][A100%|██████████| 3/3 [03:55<00:00, 78.62s/it]
+                 INFO     | >> Current task success rate: run_libero_eval.py:230
+                          1.0                                                   
+                 INFO     | >> Current total success      run_libero_eval.py:230
+                          rate: 1.0                                             
+ 50%|█████     | 5/10 [16:02<16:36, 199.32s/it][Warning]: datasets path /root/sj-tmp/workspace/LIBERO/libero/libero/../datasets does not exist!
+                 INFO     | >> Using default initial      run_libero_eval.py:230
+                          states                                                
+[Warning]: datasets path /root/sj-tmp/workspace/LIBERO/libero/libero/../datasets does not exist!
+
+  0%|          | 0/3 [00:00<?, ?it/s][A03/23 [00:00:33] INFO     | >>                            run_libero_eval.py:230
+                          Task: pick up the black bowl on                       
+                          the ramekin and place it on the                       
+                          plate                                                 
+                 INFO     | >> Starting episode 1...      run_libero_eval.py:230
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+>> VLA-Cache inference mode
+Current CUDA latency: 369.389740 ms | Average CUDA latency: 201.530319 ms, Average TFLOPs: 3.008290
+>> VLA-Cache inference mode
+Current CUDA latency: 286.604492 ms | Average CUDA latency: 201.978078 ms, Average TFLOPs: 3.008122
+>> VLA-Cache inference mode
+Current CUDA latency: 114.631363 ms | Average CUDA latency: 201.520765 ms, Average TFLOPs: 3.007946
+>> VLA-Cache inference mode
+Current CUDA latency: 118.404831 ms | Average CUDA latency: 201.087870 ms, Average TFLOPs: 3.007709
+>> VLA-Cache inference mode
+Current CUDA latency: 127.204834 ms | Average CUDA latency: 200.705056 ms, Average TFLOPs: 3.007702
+>> VLA-Cache inference mode
+Current CUDA latency: 124.459518 ms | Average CUDA latency: 200.312038 ms, Average TFLOPs: 3.007263
+>> VLA-Cache inference mode
+Current CUDA latency: 197.092697 ms | Average CUDA latency: 200.295528 ms, Average TFLOPs: 3.006619
+>> VLA-Cache inference mode
+Current CUDA latency: 194.760544 ms | Average CUDA latency: 200.267289 ms, Average TFLOPs: 3.006147
+>> VLA-Cache inference mode
+Current CUDA latency: 132.867462 ms | Average CUDA latency: 199.925158 ms, Average TFLOPs: 3.005895
+>> VLA-Cache inference mode
+Current CUDA latency: 120.869858 ms | Average CUDA latency: 199.525888 ms, Average TFLOPs: 3.005580
+>> VLA-Cache inference mode
+Current CUDA latency: 112.616989 ms | Average CUDA latency: 199.089160 ms, Average TFLOPs: 3.005175
+Average time per step: 515.5796 ms, Control Frequency: 15.52 Hz, Token Reusing Ratio (Primary): 31.85 %, , Token Reusing Ratio (Wrist): 33.63 %
+Saved rollout MP4 at path ./rollouts/2026_03_22/primary--2026_03_22-23_44_14--episode=16--success=True--task=pick_up_the_black_bowl_on_the_ramekin_and_place_it.mp4
+Saved rollout MP4 at path ./rollouts/2026_03_22/wrist--2026_03_22-23_44_14--episode=16--success=True--task=pick_up_the_black_bowl_on_the_ramekin_and_place_it.mp4
+03/23 [00:01:30] INFO     | >> Success: True              run_libero_eval.py:230
+                 INFO     | >> # episodes completed so    run_libero_eval.py:230
+                          far: 16                                               
+                 INFO     | >> # successes: 16 (100.0%)   run_libero_eval.py:230
+
+ 33%|███▎      | 1/3 [00:57<01:54, 57.46s/it][A                 INFO     | >>                            run_libero_eval.py:230
+                          Task: pick up the black bowl on                       
+                          the ramekin and place it on the                       
+                          plate                                                 
+                 INFO     | >> Starting episode 2...      run_libero_eval.py:230
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+>> VLA-Cache inference mode
+Current CUDA latency: 317.153687 ms | Average CUDA latency: 199.679483 ms, Average TFLOPs: 3.008869
+>> VLA-Cache inference mode
+Current CUDA latency: 333.217743 ms | Average CUDA latency: 200.343852 ms, Average TFLOPs: 3.008899
+>> VLA-Cache inference mode
+Current CUDA latency: 122.295555 ms | Average CUDA latency: 199.957475 ms, Average TFLOPs: 3.008644
+>> VLA-Cache inference mode
+Current CUDA latency: 114.382179 ms | Average CUDA latency: 199.535921 ms, Average TFLOPs: 3.008393
+>> VLA-Cache inference mode
+Current CUDA latency: 188.452698 ms | Average CUDA latency: 199.481592 ms, Average TFLOPs: 3.008017
+>> VLA-Cache inference mode
+Current CUDA latency: 240.047516 ms | Average CUDA latency: 199.679474 ms, Average TFLOPs: 3.007814
+>> VLA-Cache inference mode
+Current CUDA latency: 132.888550 ms | Average CUDA latency: 199.355247 ms, Average TFLOPs: 3.007430
+>> VLA-Cache inference mode
+Current CUDA latency: 117.637794 ms | Average CUDA latency: 198.960476 ms, Average TFLOPs: 3.007168
+>> VLA-Cache inference mode
+Current CUDA latency: 123.212769 ms | Average CUDA latency: 198.596305 ms, Average TFLOPs: 3.006953
+>> VLA-Cache inference mode
+Current CUDA latency: 249.212250 ms | Average CUDA latency: 198.838486 ms, Average TFLOPs: 3.006671
+>> VLA-Cache inference mode
+Current CUDA latency: 184.063965 ms | Average CUDA latency: 198.768131 ms, Average TFLOPs: 3.006310
+Average time per step: 537.8413 ms, Control Frequency: 14.87 Hz, Token Reusing Ratio (Primary): 31.66 %, , Token Reusing Ratio (Wrist): 33.52 %
+Saved rollout MP4 at path ./rollouts/2026_03_22/primary--2026_03_22-23_44_14--episode=17--success=True--task=pick_up_the_black_bowl_on_the_ramekin_and_place_it.mp4
+Saved rollout MP4 at path ./rollouts/2026_03_22/wrist--2026_03_22-23_44_14--episode=17--success=True--task=pick_up_the_black_bowl_on_the_ramekin_and_place_it.mp4
+03/23 [00:02:28] INFO     | >> Success: True              run_libero_eval.py:230
+                 INFO     | >> # episodes completed so    run_libero_eval.py:230
+                          far: 17                                               
+                 INFO     | >> # successes: 17 (100.0%)   run_libero_eval.py:230
+
+ 67%|██████▋   | 2/3 [01:55<00:57, 57.66s/it][A                 INFO     | >>                            run_libero_eval.py:230
+                          Task: pick up the black bowl on                       
+                          the ramekin and place it on the                       
+                          plate                                                 
+                 INFO     | >> Starting episode 3...      run_libero_eval.py:230
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+>> VLA-Cache inference mode
+Current CUDA latency: 530.436218 ms | Average CUDA latency: 200.340018 ms, Average TFLOPs: 3.009806
+>> VLA-Cache inference mode
+Current CUDA latency: 278.323181 ms | Average CUDA latency: 200.707863 ms, Average TFLOPs: 3.009699
+>> VLA-Cache inference mode
+Current CUDA latency: 119.155807 ms | Average CUDA latency: 200.324990 ms, Average TFLOPs: 3.009582
+>> VLA-Cache inference mode
+Current CUDA latency: 118.871300 ms | Average CUDA latency: 199.944365 ms, Average TFLOPs: 3.009126
+>> VLA-Cache inference mode
+Current CUDA latency: 111.315422 ms | Average CUDA latency: 199.532137 ms, Average TFLOPs: 3.008660
+>> VLA-Cache inference mode
+Current CUDA latency: 118.753342 ms | Average CUDA latency: 199.158161 ms, Average TFLOPs: 3.008306
+>> VLA-Cache inference mode
+Current CUDA latency: 349.566254 ms | Average CUDA latency: 199.851286 ms, Average TFLOPs: 3.007914
+>> VLA-Cache inference mode
+Current CUDA latency: 203.073380 ms | Average CUDA latency: 199.866067 ms, Average TFLOPs: 3.007644
+>> VLA-Cache inference mode
+Current CUDA latency: 134.640121 ms | Average CUDA latency: 199.568231 ms, Average TFLOPs: 3.007236
+>> VLA-Cache inference mode
+Current CUDA latency: 120.906403 ms | Average CUDA latency: 199.210677 ms, Average TFLOPs: 3.006788
+Average time per step: 562.3748 ms, Control Frequency: 14.23 Hz, Token Reusing Ratio (Primary): 32.18 %, , Token Reusing Ratio (Wrist): 33.26 %
+Saved rollout MP4 at path ./rollouts/2026_03_22/primary--2026_03_22-23_44_14--episode=18--success=True--task=pick_up_the_black_bowl_on_the_ramekin_and_place_it.mp4
+Saved rollout MP4 at path ./rollouts/2026_03_22/wrist--2026_03_22-23_44_14--episode=18--success=True--task=pick_up_the_black_bowl_on_the_ramekin_and_place_it.mp4
+03/23 [00:03:24] INFO     | >> Success: True              run_libero_eval.py:230
+                 INFO     | >> # episodes completed so    run_libero_eval.py:230
+                          far: 18                                               
+                 INFO     | >> # successes: 18 (100.0%)   run_libero_eval.py:230
+
+100%|██████████| 3/3 [02:51<00:00, 56.97s/it][A100%|██████████| 3/3 [02:51<00:00, 57.13s/it]
+                 INFO     | >> Current task success rate: run_libero_eval.py:230
+                          1.0                                                   
+                 INFO     | >> Current total success      run_libero_eval.py:230
+                          rate: 1.0                                             
+ 60%|██████    | 6/10 [18:56<12:42, 190.59s/it][Warning]: datasets path /root/sj-tmp/workspace/LIBERO/libero/libero/../datasets does not exist!
+                 INFO     | >> Using default initial      run_libero_eval.py:230
+                          states                                                
+[Warning]: datasets path /root/sj-tmp/workspace/LIBERO/libero/libero/../datasets does not exist!
+
+  0%|          | 0/3 [00:00<?, ?it/s][A03/23 [00:03:27] INFO     | >>                            run_libero_eval.py:230
+                          Task: pick up the black bowl                          
+                          next to the cookie box and                            
+                          place it on the plate                                 
+                 INFO     | >> Starting episode 1...      run_libero_eval.py:230
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+>> VLA-Cache inference mode
+Current CUDA latency: 414.938782 ms | Average CUDA latency: 200.186823 ms, Average TFLOPs: 3.010123
+>> VLA-Cache inference mode
+Current CUDA latency: 295.651764 ms | Average CUDA latency: 200.616845 ms, Average TFLOPs: 3.009995
+>> VLA-Cache inference mode
+Current CUDA latency: 111.285118 ms | Average CUDA latency: 200.216254 ms, Average TFLOPs: 3.009742
+>> VLA-Cache inference mode
+Current CUDA latency: 142.688217 ms | Average CUDA latency: 199.959433 ms, Average TFLOPs: 3.009790
+>> VLA-Cache inference mode
+Current CUDA latency: 261.995392 ms | Average CUDA latency: 200.235148 ms, Average TFLOPs: 3.009780
+>> VLA-Cache inference mode
+Current CUDA latency: 244.002274 ms | Average CUDA latency: 200.428808 ms, Average TFLOPs: 3.009374
+>> VLA-Cache inference mode
+Current CUDA latency: 166.605347 ms | Average CUDA latency: 200.279806 ms, Average TFLOPs: 3.008721
+>> VLA-Cache inference mode
+Current CUDA latency: 160.539749 ms | Average CUDA latency: 200.105507 ms, Average TFLOPs: 3.007785
+>> VLA-Cache inference mode
+Current CUDA latency: 205.425980 ms | Average CUDA latency: 200.128741 ms, Average TFLOPs: 3.006719
+>> VLA-Cache inference mode
+Current CUDA latency: 120.873184 ms | Average CUDA latency: 199.784151 ms, Average TFLOPs: 3.005738
+>> VLA-Cache inference mode
+Current CUDA latency: 108.947395 ms | Average CUDA latency: 199.390919 ms, Average TFLOPs: 3.004450
+>> VLA-Cache inference mode
+Current CUDA latency: 103.014946 ms | Average CUDA latency: 198.975505 ms, Average TFLOPs: 3.003323
+>> VLA-Cache inference mode
+Current CUDA latency: 166.214600 ms | Average CUDA latency: 198.834900 ms, Average TFLOPs: 3.002571
+>> VLA-Cache inference mode
+Current CUDA latency: 242.216187 ms | Average CUDA latency: 199.020290 ms, Average TFLOPs: 3.002041
+Average time per step: 582.4545 ms, Control Frequency: 13.73 Hz, Token Reusing Ratio (Primary): 34.88 %, , Token Reusing Ratio (Wrist): 35.77 %
+Saved rollout MP4 at path ./rollouts/2026_03_22/primary--2026_03_22-23_44_14--episode=19--success=True--task=pick_up_the_black_bowl_next_to_the_cookie_box_and_.mp4
+Saved rollout MP4 at path ./rollouts/2026_03_22/wrist--2026_03_22-23_44_14--episode=19--success=True--task=pick_up_the_black_bowl_next_to_the_cookie_box_and_.mp4
+03/23 [00:04:39] INFO     | >> Success: True              run_libero_eval.py:230
+                 INFO     | >> # episodes completed so    run_libero_eval.py:230
+                          far: 19                                               
+                 INFO     | >> # successes: 19 (100.0%)   run_libero_eval.py:230
+
+ 33%|███▎      | 1/3 [01:12<02:24, 72.48s/it][A                 INFO     | >>                            run_libero_eval.py:230
+                          Task: pick up the black bowl                          
+                          next to the cookie box and                            
+                          place it on the plate                                 
+                 INFO     | >> Starting episode 2...      run_libero_eval.py:230
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+>> VLA-Cache inference mode
+Current CUDA latency: 308.894318 ms | Average CUDA latency: 199.487839 ms, Average TFLOPs: 3.005198
+>> VLA-Cache inference mode
+Current CUDA latency: 287.217529 ms | Average CUDA latency: 199.859575 ms, Average TFLOPs: 3.005029
+>> VLA-Cache inference mode
+Current CUDA latency: 112.357315 ms | Average CUDA latency: 199.490368 ms, Average TFLOPs: 3.004930
+>> VLA-Cache inference mode
+Current CUDA latency: 163.724670 ms | Average CUDA latency: 199.340092 ms, Average TFLOPs: 3.004972
+>> VLA-Cache inference mode
+Current CUDA latency: 130.308380 ms | Average CUDA latency: 199.051256 ms, Average TFLOPs: 3.004917
+>> VLA-Cache inference mode
+Current CUDA latency: 163.738235 ms | Average CUDA latency: 198.904118 ms, Average TFLOPs: 3.004771
+>> VLA-Cache inference mode
+Current CUDA latency: 160.044067 ms | Average CUDA latency: 198.742873 ms, Average TFLOPs: 3.004177
+>> VLA-Cache inference mode
+Current CUDA latency: 134.235077 ms | Average CUDA latency: 198.476312 ms, Average TFLOPs: 3.003427
+>> VLA-Cache inference mode
+Current CUDA latency: 189.573441 ms | Average CUDA latency: 198.439675 ms, Average TFLOPs: 3.002397
+>> VLA-Cache inference mode
+Current CUDA latency: 132.072479 ms | Average CUDA latency: 198.167678 ms, Average TFLOPs: 3.001334
+>> VLA-Cache inference mode
+Current CUDA latency: 105.363548 ms | Average CUDA latency: 197.788886 ms, Average TFLOPs: 3.000314
+>> VLA-Cache inference mode
+Current CUDA latency: 105.358749 ms | Average CUDA latency: 197.413154 ms, Average TFLOPs: 2.999508
+>> VLA-Cache inference mode
+Current CUDA latency: 115.661728 ms | Average CUDA latency: 197.082176 ms, Average TFLOPs: 2.998758
+>> VLA-Cache inference mode
+Current CUDA latency: 129.623810 ms | Average CUDA latency: 196.810167 ms, Average TFLOPs: 2.998159
+Average time per step: 571.5285 ms, Control Frequency: 14.00 Hz, Token Reusing Ratio (Primary): 35.25 %, , Token Reusing Ratio (Wrist): 35.80 %
+Saved rollout MP4 at path ./rollouts/2026_03_22/primary--2026_03_22-23_44_14--episode=20--success=True--task=pick_up_the_black_bowl_next_to_the_cookie_box_and_.mp4
+Saved rollout MP4 at path ./rollouts/2026_03_22/wrist--2026_03_22-23_44_14--episode=20--success=True--task=pick_up_the_black_bowl_next_to_the_cookie_box_and_.mp4
+03/23 [00:05:50] INFO     | >> Success: True              run_libero_eval.py:230
+                 INFO     | >> # episodes completed so    run_libero_eval.py:230
+                          far: 20                                               
+                 INFO     | >> # successes: 20 (100.0%)   run_libero_eval.py:230
+
+ 67%|██████▋   | 2/3 [02:23<01:11, 71.63s/it][A                 INFO     | >>                            run_libero_eval.py:230
+                          Task: pick up the black bowl                          
+                          next to the cookie box and                            
+                          place it on the plate                                 
+                 INFO     | >> Starting episode 3...      run_libero_eval.py:230
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+>> VLA-Cache inference mode
+Current CUDA latency: 347.152466 ms | Average CUDA latency: 197.413951 ms, Average TFLOPs: 3.001155
+>> VLA-Cache inference mode
+Current CUDA latency: 266.752258 ms | Average CUDA latency: 197.691304 ms, Average TFLOPs: 3.001008
+>> VLA-Cache inference mode
+Current CUDA latency: 121.980515 ms | Average CUDA latency: 197.389667 ms, Average TFLOPs: 3.000951
+>> VLA-Cache inference mode
+Current CUDA latency: 149.585724 ms | Average CUDA latency: 197.199969 ms, Average TFLOPs: 3.000960
+>> VLA-Cache inference mode
+Current CUDA latency: 226.947876 ms | Average CUDA latency: 197.317550 ms, Average TFLOPs: 3.000945
+>> VLA-Cache inference mode
+Current CUDA latency: 174.596832 ms | Average CUDA latency: 197.228098 ms, Average TFLOPs: 3.000565
+>> VLA-Cache inference mode
+Current CUDA latency: 117.000511 ms | Average CUDA latency: 196.913480 ms, Average TFLOPs: 3.000015
+>> VLA-Cache inference mode
+Current CUDA latency: 117.119392 ms | Average CUDA latency: 196.601785 ms, Average TFLOPs: 2.999560
+>> VLA-Cache inference mode
+Current CUDA latency: 110.879486 ms | Average CUDA latency: 196.268235 ms, Average TFLOPs: 2.998669
+>> VLA-Cache inference mode
+Current CUDA latency: 108.618782 ms | Average CUDA latency: 195.928508 ms, Average TFLOPs: 2.997764
+>> VLA-Cache inference mode
+Current CUDA latency: 110.389763 ms | Average CUDA latency: 195.598243 ms, Average TFLOPs: 2.997083
+>> VLA-Cache inference mode
+Current CUDA latency: 194.848999 ms | Average CUDA latency: 195.595361 ms, Average TFLOPs: 2.996537
+Average time per step: 567.9979 ms, Control Frequency: 14.08 Hz, Token Reusing Ratio (Primary): 35.08 %, , Token Reusing Ratio (Wrist): 35.36 %
+Saved rollout MP4 at path ./rollouts/2026_03_22/primary--2026_03_22-23_44_14--episode=21--success=True--task=pick_up_the_black_bowl_next_to_the_cookie_box_and_.mp4
+Saved rollout MP4 at path ./rollouts/2026_03_22/wrist--2026_03_22-23_44_14--episode=21--success=True--task=pick_up_the_black_bowl_next_to_the_cookie_box_and_.mp4
+03/23 [00:06:52] INFO     | >> Success: True              run_libero_eval.py:230
+                 INFO     | >> # episodes completed so    run_libero_eval.py:230
+                          far: 21                                               
+                 INFO     | >> # successes: 21 (100.0%)   run_libero_eval.py:230
+
+100%|██████████| 3/3 [03:25<00:00, 67.00s/it][A100%|██████████| 3/3 [03:25<00:00, 68.33s/it]
+                 INFO     | >> Current task success rate: run_libero_eval.py:230
+                          1.0                                                   
+                 INFO     | >> Current total success      run_libero_eval.py:230
+                          rate: 1.0                                             
+ 70%|███████   | 7/10 [22:23<09:48, 196.04s/it][Warning]: datasets path /root/sj-tmp/workspace/LIBERO/libero/libero/../datasets does not exist!
+                 INFO     | >> Using default initial      run_libero_eval.py:230
+                          states                                                
+[Warning]: datasets path /root/sj-tmp/workspace/LIBERO/libero/libero/../datasets does not exist!
+
+  0%|          | 0/3 [00:00<?, ?it/s][A03/23 [00:06:54] INFO     | >>                            run_libero_eval.py:230
+                          Task: pick up the black bowl on                       
+                          the stove and place it on the                         
+                          plate                                                 
+                 INFO     | >> Starting episode 1...      run_libero_eval.py:230
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+>> VLA-Cache inference mode
+Current CUDA latency: 362.602661 ms | Average CUDA latency: 196.235236 ms, Average TFLOPs: 2.999376
+>> VLA-Cache inference mode
+Current CUDA latency: 420.514130 ms | Average CUDA latency: 197.091262 ms, Average TFLOPs: 2.999308
+>> VLA-Cache inference mode
+Current CUDA latency: 208.526749 ms | Average CUDA latency: 197.134743 ms, Average TFLOPs: 2.999433
+>> VLA-Cache inference mode
+Current CUDA latency: 142.144516 ms | Average CUDA latency: 196.926447 ms, Average TFLOPs: 2.999382
+>> VLA-Cache inference mode
+Current CUDA latency: 120.896797 ms | Average CUDA latency: 196.639542 ms, Average TFLOPs: 2.999477
+>> VLA-Cache inference mode
+Current CUDA latency: 121.037636 ms | Average CUDA latency: 196.355325 ms, Average TFLOPs: 2.999275
+>> VLA-Cache inference mode
+Current CUDA latency: 115.160225 ms | Average CUDA latency: 196.051223 ms, Average TFLOPs: 2.999021
+>> VLA-Cache inference mode
+Current CUDA latency: 116.605568 ms | Average CUDA latency: 195.754784 ms, Average TFLOPs: 2.998861
+>> VLA-Cache inference mode
+Current CUDA latency: 132.016830 ms | Average CUDA latency: 195.517840 ms, Average TFLOPs: 2.998624
+>> VLA-Cache inference mode
+Current CUDA latency: 252.882111 ms | Average CUDA latency: 195.730300 ms, Average TFLOPs: 2.998401
+>> VLA-Cache inference mode
+Current CUDA latency: 158.668701 ms | Average CUDA latency: 195.593542 ms, Average TFLOPs: 2.998059
+>> VLA-Cache inference mode
+Current CUDA latency: 115.756737 ms | Average CUDA latency: 195.300024 ms, Average TFLOPs: 2.997644
+>> VLA-Cache inference mode
+Current CUDA latency: 154.339233 ms | Average CUDA latency: 195.149985 ms, Average TFLOPs: 2.997381
+>> VLA-Cache inference mode
+Current CUDA latency: 108.451935 ms | Average CUDA latency: 194.833568 ms, Average TFLOPs: 2.996910
+Average time per step: 565.0094 ms, Control Frequency: 14.16 Hz, Token Reusing Ratio (Primary): 32.65 %, , Token Reusing Ratio (Wrist): 33.59 %
+Saved rollout MP4 at path ./rollouts/2026_03_22/primary--2026_03_22-23_44_14--episode=22--success=True--task=pick_up_the_black_bowl_on_the_stove_and_place_it_o.mp4
+Saved rollout MP4 at path ./rollouts/2026_03_22/wrist--2026_03_22-23_44_14--episode=22--success=True--task=pick_up_the_black_bowl_on_the_stove_and_place_it_o.mp4
+03/23 [00:08:09] INFO     | >> Success: True              run_libero_eval.py:230
+                 INFO     | >> # episodes completed so    run_libero_eval.py:230
+                          far: 22                                               
+                 INFO     | >> # successes: 22 (100.0%)   run_libero_eval.py:230
+
+ 33%|███▎      | 1/3 [01:14<02:29, 74.55s/it][A                 INFO     | >>                            run_libero_eval.py:230
+                          Task: pick up the black bowl on                       
+                          the stove and place it on the                         
+                          plate                                                 
+                 INFO     | >> Starting episode 2...      run_libero_eval.py:230
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+>> VLA-Cache inference mode
+Current CUDA latency: 470.973938 ms | Average CUDA latency: 195.837715 ms, Average TFLOPs: 2.999603
+>> VLA-Cache inference mode
+Current CUDA latency: 327.980652 ms | Average CUDA latency: 196.316494 ms, Average TFLOPs: 2.999418
+>> VLA-Cache inference mode
+Current CUDA latency: 110.826622 ms | Average CUDA latency: 196.007866 ms, Average TFLOPs: 2.999336
+>> VLA-Cache inference mode
+Current CUDA latency: 113.698563 ms | Average CUDA latency: 195.711790 ms, Average TFLOPs: 2.999185
+>> VLA-Cache inference mode
+Current CUDA latency: 108.831970 ms | Average CUDA latency: 195.400392 ms, Average TFLOPs: 2.998986
+>> VLA-Cache inference mode
+Current CUDA latency: 138.204025 ms | Average CUDA latency: 195.196120 ms, Average TFLOPs: 2.998983
+>> VLA-Cache inference mode
+Current CUDA latency: 121.195198 ms | Average CUDA latency: 194.932771 ms, Average TFLOPs: 2.998652
+>> VLA-Cache inference mode
+Current CUDA latency: 115.027969 ms | Average CUDA latency: 194.649421 ms, Average TFLOPs: 2.998408
+>> VLA-Cache inference mode
+Current CUDA latency: 178.584167 ms | Average CUDA latency: 194.592653 ms, Average TFLOPs: 2.998253
+>> VLA-Cache inference mode
+Current CUDA latency: 123.174911 ms | Average CUDA latency: 194.341182 ms, Average TFLOPs: 2.998072
+>> VLA-Cache inference mode
+Current CUDA latency: 325.642456 ms | Average CUDA latency: 194.801888 ms, Average TFLOPs: 2.997820
+>> VLA-Cache inference mode
+Current CUDA latency: 170.528839 ms | Average CUDA latency: 194.717018 ms, Average TFLOPs: 2.997469
+>> VLA-Cache inference mode
+Current CUDA latency: 109.178268 ms | Average CUDA latency: 194.418973 ms, Average TFLOPs: 2.997184
+>> VLA-Cache inference mode
+Current CUDA latency: 107.857246 ms | Average CUDA latency: 194.118412 ms, Average TFLOPs: 2.996815
+>> VLA-Cache inference mode
+Current CUDA latency: 208.475555 ms | Average CUDA latency: 194.168090 ms, Average TFLOPs: 2.996426
+Average time per step: 566.8558 ms, Control Frequency: 14.11 Hz, Token Reusing Ratio (Primary): 33.14 %, , Token Reusing Ratio (Wrist): 33.86 %
+Saved rollout MP4 at path ./rollouts/2026_03_22/primary--2026_03_22-23_44_14--episode=23--success=True--task=pick_up_the_black_bowl_on_the_stove_and_place_it_o.mp4
+Saved rollout MP4 at path ./rollouts/2026_03_22/wrist--2026_03_22-23_44_14--episode=23--success=True--task=pick_up_the_black_bowl_on_the_stove_and_place_it_o.mp4
+03/23 [00:09:24] INFO     | >> Success: True              run_libero_eval.py:230
+                 INFO     | >> # episodes completed so    run_libero_eval.py:230
+                          far: 23                                               
+                 INFO     | >> # successes: 23 (100.0%)   run_libero_eval.py:230
+
+ 67%|██████▋   | 2/3 [02:29<01:14, 74.85s/it][A                 INFO     | >>                            run_libero_eval.py:230
+                          Task: pick up the black bowl on                       
+                          the stove and place it on the                         
+                          plate                                                 
+                 INFO     | >> Starting episode 3...      run_libero_eval.py:230
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+>> VLA-Cache inference mode
+Current CUDA latency: 355.998260 ms | Average CUDA latency: 194.726125 ms, Average TFLOPs: 2.998982
+>> VLA-Cache inference mode
+Current CUDA latency: 348.809204 ms | Average CUDA latency: 195.255621 ms, Average TFLOPs: 2.998901
+>> VLA-Cache inference mode
+Current CUDA latency: 118.219101 ms | Average CUDA latency: 194.991797 ms, Average TFLOPs: 2.998800
+>> VLA-Cache inference mode
+Current CUDA latency: 579.408630 ms | Average CUDA latency: 196.303800 ms, Average TFLOPs: 2.998697
+>> VLA-Cache inference mode
+Current CUDA latency: 339.356110 ms | Average CUDA latency: 196.790372 ms, Average TFLOPs: 2.998511
+>> VLA-Cache inference mode
+Current CUDA latency: 179.005310 ms | Average CUDA latency: 196.730084 ms, Average TFLOPs: 2.998468
+>> VLA-Cache inference mode
+Current CUDA latency: 146.115997 ms | Average CUDA latency: 196.559090 ms, Average TFLOPs: 2.998491
+>> VLA-Cache inference mode
+Current CUDA latency: 116.313408 ms | Average CUDA latency: 196.288903 ms, Average TFLOPs: 2.998363
+>> VLA-Cache inference mode
+Current CUDA latency: 210.812775 ms | Average CUDA latency: 196.337641 ms, Average TFLOPs: 2.998172
+>> VLA-Cache inference mode
+Current CUDA latency: 230.774780 ms | Average CUDA latency: 196.452815 ms, Average TFLOPs: 2.997928
+>> VLA-Cache inference mode
+Current CUDA latency: 126.408066 ms | Average CUDA latency: 196.219333 ms, Average TFLOPs: 2.997601
+>> VLA-Cache inference mode
+Current CUDA latency: 158.252930 ms | Average CUDA latency: 196.093198 ms, Average TFLOPs: 2.997223
+>> VLA-Cache inference mode
+Current CUDA latency: 312.067932 ms | Average CUDA latency: 196.477221 ms, Average TFLOPs: 2.996826
+>> VLA-Cache inference mode
+Current CUDA latency: 211.193924 ms | Average CUDA latency: 196.525791 ms, Average TFLOPs: 2.996513
+>> VLA-Cache inference mode
+Current CUDA latency: 156.748871 ms | Average CUDA latency: 196.394945 ms, Average TFLOPs: 2.996124
+Average time per step: 574.6816 ms, Control Frequency: 13.92 Hz, Token Reusing Ratio (Primary): 33.75 %, , Token Reusing Ratio (Wrist): 33.65 %
+Saved rollout MP4 at path ./rollouts/2026_03_22/primary--2026_03_22-23_44_14--episode=24--success=True--task=pick_up_the_black_bowl_on_the_stove_and_place_it_o.mp4
+Saved rollout MP4 at path ./rollouts/2026_03_22/wrist--2026_03_22-23_44_14--episode=24--success=True--task=pick_up_the_black_bowl_on_the_stove_and_place_it_o.mp4
+03/23 [00:10:42] INFO     | >> Success: True              run_libero_eval.py:230
+                 INFO     | >> # episodes completed so    run_libero_eval.py:230
+                          far: 24                                               
+                 INFO     | >> # successes: 24 (100.0%)   run_libero_eval.py:230
+
+100%|██████████| 3/3 [03:48<00:00, 76.52s/it][A100%|██████████| 3/3 [03:48<00:00, 76.04s/it]
+                 INFO     | >> Current task success rate: run_libero_eval.py:230
+                          1.0                                                   
+                 INFO     | >> Current total success      run_libero_eval.py:230
+                          rate: 1.0                                             
+ 80%|████████  | 8/10 [26:14<06:54, 207.06s/it][Warning]: datasets path /root/sj-tmp/workspace/LIBERO/libero/libero/../datasets does not exist!
+                 INFO     | >> Using default initial      run_libero_eval.py:230
+                          states                                                
+[Warning]: datasets path /root/sj-tmp/workspace/LIBERO/libero/libero/../datasets does not exist!
+
+  0%|          | 0/3 [00:00<?, ?it/s][A03/23 [00:10:45] INFO     | >>                            run_libero_eval.py:230
+                          Task: pick up the black bowl                          
+                          next to the plate and place it                        
+                          on the plate                                          
+                 INFO     | >> Starting episode 1...      run_libero_eval.py:230
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+>> VLA-Cache inference mode
+Current CUDA latency: 277.570770 ms | Average CUDA latency: 196.661096 ms, Average TFLOPs: 2.998555
+>> VLA-Cache inference mode
+Current CUDA latency: 242.816193 ms | Average CUDA latency: 196.811929 ms, Average TFLOPs: 2.998476
+>> VLA-Cache inference mode
+Current CUDA latency: 118.265694 ms | Average CUDA latency: 196.556078 ms, Average TFLOPs: 2.998467
+>> VLA-Cache inference mode
+Current CUDA latency: 146.470749 ms | Average CUDA latency: 196.393464 ms, Average TFLOPs: 2.998349
+>> VLA-Cache inference mode
+Current CUDA latency: 266.402954 ms | Average CUDA latency: 196.620032 ms, Average TFLOPs: 2.998338
+>> VLA-Cache inference mode
+Current CUDA latency: 143.718567 ms | Average CUDA latency: 196.449382 ms, Average TFLOPs: 2.998094
+>> VLA-Cache inference mode
+Current CUDA latency: 110.031776 ms | Average CUDA latency: 196.171512 ms, Average TFLOPs: 2.997764
+>> VLA-Cache inference mode
+Current CUDA latency: 129.595291 ms | Average CUDA latency: 195.958126 ms, Average TFLOPs: 2.997297
+>> VLA-Cache inference mode
+Current CUDA latency: 103.280930 ms | Average CUDA latency: 195.662033 ms, Average TFLOPs: 2.996526
+>> VLA-Cache inference mode
+Current CUDA latency: 106.279388 ms | Average CUDA latency: 195.377375 ms, Average TFLOPs: 2.995951
+>> VLA-Cache inference mode
+Current CUDA latency: 152.799011 ms | Average CUDA latency: 195.242206 ms, Average TFLOPs: 2.995503
+>> VLA-Cache inference mode
+Current CUDA latency: 132.871582 ms | Average CUDA latency: 195.044830 ms, Average TFLOPs: 2.995158
+Average time per step: 549.4050 ms, Control Frequency: 14.56 Hz, Token Reusing Ratio (Primary): 33.95 %, , Token Reusing Ratio (Wrist): 33.20 %
+Saved rollout MP4 at path ./rollouts/2026_03_22/primary--2026_03_22-23_44_14--episode=25--success=True--task=pick_up_the_black_bowl_next_to_the_plate_and_place.mp4
+Saved rollout MP4 at path ./rollouts/2026_03_22/wrist--2026_03_22-23_44_14--episode=25--success=True--task=pick_up_the_black_bowl_next_to_the_plate_and_place.mp4
+03/23 [00:11:50] INFO     | >> Success: True              run_libero_eval.py:230
+                 INFO     | >> # episodes completed so    run_libero_eval.py:230
+                          far: 25                                               
+                 INFO     | >> # successes: 25 (100.0%)   run_libero_eval.py:230
+
+ 33%|███▎      | 1/3 [01:05<02:11, 65.71s/it][A                 INFO     | >>                            run_libero_eval.py:230
+                          Task: pick up the black bowl                          
+                          next to the plate and place it                        
+                          on the plate                                          
+                 INFO     | >> Starting episode 2...      run_libero_eval.py:230
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+>> VLA-Cache inference mode
+Current CUDA latency: 391.135742 ms | Average CUDA latency: 195.663413 ms, Average TFLOPs: 2.997500
+>> VLA-Cache inference mode
+Current CUDA latency: 377.122437 ms | Average CUDA latency: 196.234039 ms, Average TFLOPs: 2.997568
+>> VLA-Cache inference mode
+Current CUDA latency: 112.808159 ms | Average CUDA latency: 195.972516 ms, Average TFLOPs: 2.997580
+>> VLA-Cache inference mode
+Current CUDA latency: 115.375549 ms | Average CUDA latency: 195.720651 ms, Average TFLOPs: 2.997467
+>> VLA-Cache inference mode
+Current CUDA latency: 143.281570 ms | Average CUDA latency: 195.557289 ms, Average TFLOPs: 2.997441
+>> VLA-Cache inference mode
+Current CUDA latency: 314.536530 ms | Average CUDA latency: 195.926790 ms, Average TFLOPs: 2.997172
+>> VLA-Cache inference mode
+Current CUDA latency: 156.041092 ms | Average CUDA latency: 195.803305 ms, Average TFLOPs: 2.996837
+>> VLA-Cache inference mode
+Current CUDA latency: 287.781708 ms | Average CUDA latency: 196.087189 ms, Average TFLOPs: 2.996533
+>> VLA-Cache inference mode
+Current CUDA latency: 215.794464 ms | Average CUDA latency: 196.147826 ms, Average TFLOPs: 2.996019
+>> VLA-Cache inference mode
+Current CUDA latency: 210.968613 ms | Average CUDA latency: 196.193289 ms, Average TFLOPs: 2.995482
+>> VLA-Cache inference mode
+Current CUDA latency: 517.502441 ms | Average CUDA latency: 197.175886 ms, Average TFLOPs: 2.994961
+>> VLA-Cache inference mode
+Current CUDA latency: 156.983139 ms | Average CUDA latency: 197.053347 ms, Average TFLOPs: 2.994621
+>> VLA-Cache inference mode
+Current CUDA latency: 139.346146 ms | Average CUDA latency: 196.877945 ms, Average TFLOPs: 2.994277
+Average time per step: 603.9462 ms, Control Frequency: 13.25 Hz, Token Reusing Ratio (Primary): 33.30 %, , Token Reusing Ratio (Wrist): 33.80 %
+Saved rollout MP4 at path ./rollouts/2026_03_22/primary--2026_03_22-23_44_14--episode=26--success=True--task=pick_up_the_black_bowl_next_to_the_plate_and_place.mp4
+Saved rollout MP4 at path ./rollouts/2026_03_22/wrist--2026_03_22-23_44_14--episode=26--success=True--task=pick_up_the_black_bowl_next_to_the_plate_and_place.mp4
+03/23 [00:12:59] INFO     | >> Success: True              run_libero_eval.py:230
+                 INFO     | >> # episodes completed so    run_libero_eval.py:230
+                          far: 26                                               
+                 INFO     | >> # successes: 26 (100.0%)   run_libero_eval.py:230
+
+ 67%|██████▋   | 2/3 [02:14<01:07, 67.47s/it][A                 INFO     | >>                            run_libero_eval.py:230
+                          Task: pick up the black bowl                          
+                          next to the plate and place it                        
+                          on the plate                                          
+                 INFO     | >> Starting episode 3...      run_libero_eval.py:230
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+>> VLA-Cache inference mode
+Current CUDA latency: 425.516327 ms | Average CUDA latency: 197.570789 ms, Average TFLOPs: 2.996529
+>> VLA-Cache inference mode
+Current CUDA latency: 330.377319 ms | Average CUDA latency: 197.972017 ms, Average TFLOPs: 2.996378
+>> VLA-Cache inference mode
+Current CUDA latency: 117.359299 ms | Average CUDA latency: 197.729207 ms, Average TFLOPs: 2.996393
+>> VLA-Cache inference mode
+Current CUDA latency: 109.945282 ms | Average CUDA latency: 197.465592 ms, Average TFLOPs: 2.996291
+>> VLA-Cache inference mode
+Current CUDA latency: 110.268127 ms | Average CUDA latency: 197.204522 ms, Average TFLOPs: 2.996204
+>> VLA-Cache inference mode
+Current CUDA latency: 137.065094 ms | Average CUDA latency: 197.025001 ms, Average TFLOPs: 2.996135
+>> VLA-Cache inference mode
+Current CUDA latency: 223.706268 ms | Average CUDA latency: 197.104410 ms, Average TFLOPs: 2.995812
+>> VLA-Cache inference mode
+Current CUDA latency: 155.465561 ms | Average CUDA latency: 196.980852 ms, Average TFLOPs: 2.995436
+>> VLA-Cache inference mode
+Current CUDA latency: 126.045761 ms | Average CUDA latency: 196.770985 ms, Average TFLOPs: 2.994907
+>> VLA-Cache inference mode
+Current CUDA latency: 176.346207 ms | Average CUDA latency: 196.710735 ms, Average TFLOPs: 2.994583
+>> VLA-Cache inference mode
+Current CUDA latency: 116.691200 ms | Average CUDA latency: 196.475383 ms, Average TFLOPs: 2.994133
+>> VLA-Cache inference mode
+Current CUDA latency: 382.375702 ms | Average CUDA latency: 197.020546 ms, Average TFLOPs: 2.993797
+>> VLA-Cache inference mode
+Current CUDA latency: 181.754364 ms | Average CUDA latency: 196.975908 ms, Average TFLOPs: 2.993527
+Average time per step: 590.4911 ms, Control Frequency: 13.55 Hz, Token Reusing Ratio (Primary): 33.20 %, , Token Reusing Ratio (Wrist): 33.84 %
+Saved rollout MP4 at path ./rollouts/2026_03_22/primary--2026_03_22-23_44_14--episode=27--success=True--task=pick_up_the_black_bowl_next_to_the_plate_and_place.mp4
+Saved rollout MP4 at path ./rollouts/2026_03_22/wrist--2026_03_22-23_44_14--episode=27--success=True--task=pick_up_the_black_bowl_next_to_the_plate_and_place.mp4
+03/23 [00:14:06] INFO     | >> Success: True              run_libero_eval.py:230
+                 INFO     | >> # episodes completed so    run_libero_eval.py:230
+                          far: 27                                               
+                 INFO     | >> # successes: 27 (100.0%)   run_libero_eval.py:230
+
+100%|██████████| 3/3 [03:20<00:00, 67.06s/it][A100%|██████████| 3/3 [03:20<00:00, 67.00s/it]
+                 INFO     | >> Current task success rate: run_libero_eval.py:230
+                          1.0                                                   
+                 INFO     | >> Current total success      run_libero_eval.py:230
+                          rate: 1.0                                             
+ 90%|█████████ | 9/10 [29:37<03:25, 205.89s/it][Warning]: datasets path /root/sj-tmp/workspace/LIBERO/libero/libero/../datasets does not exist!
+                 INFO     | >> Using default initial      run_libero_eval.py:230
+                          states                                                
+[Warning]: datasets path /root/sj-tmp/workspace/LIBERO/libero/libero/../datasets does not exist!
+
+  0%|          | 0/3 [00:00<?, ?it/s][A03/23 [00:14:08] INFO     | >>                            run_libero_eval.py:230
+                          Task: pick up the black bowl on                       
+                          the wooden cabinet and place it                       
+                          on the plate                                          
+                 INFO     | >> Starting episode 1...      run_libero_eval.py:230
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+>> VLA-Cache inference mode
+Current CUDA latency: 296.002777 ms | Average CUDA latency: 197.264616 ms, Average TFLOPs: 2.995697
+>> VLA-Cache inference mode
+Current CUDA latency: 369.462036 ms | Average CUDA latency: 197.765190 ms, Average TFLOPs: 2.995757
+>> VLA-Cache inference mode
+Current CUDA latency: 146.296921 ms | Average CUDA latency: 197.616006 ms, Average TFLOPs: 2.995754
+>> VLA-Cache inference mode
+Current CUDA latency: 154.876511 ms | Average CUDA latency: 197.492482 ms, Average TFLOPs: 2.995737
+>> VLA-Cache inference mode
+Current CUDA latency: 114.320992 ms | Average CUDA latency: 197.252794 ms, Average TFLOPs: 2.995704
+>> VLA-Cache inference mode
+Current CUDA latency: 117.712128 ms | Average CUDA latency: 197.024229 ms, Average TFLOPs: 2.995616
+>> VLA-Cache inference mode
+Current CUDA latency: 117.892639 ms | Average CUDA latency: 196.797491 ms, Average TFLOPs: 2.995326
+>> VLA-Cache inference mode
+Current CUDA latency: 126.243523 ms | Average CUDA latency: 196.595908 ms, Average TFLOPs: 2.994994
+>> VLA-Cache inference mode
+Current CUDA latency: 307.649109 ms | Average CUDA latency: 196.912299 ms, Average TFLOPs: 2.994678
+>> VLA-Cache inference mode
+Current CUDA latency: 121.328125 ms | Average CUDA latency: 196.697572 ms, Average TFLOPs: 2.994332
+>> VLA-Cache inference mode
+Current CUDA latency: 125.883583 ms | Average CUDA latency: 196.496965 ms, Average TFLOPs: 2.994042
+>> VLA-Cache inference mode
+Current CUDA latency: 113.196609 ms | Average CUDA latency: 196.261654 ms, Average TFLOPs: 2.993790
+>> VLA-Cache inference mode
+Current CUDA latency: 177.163910 ms | Average CUDA latency: 196.207857 ms, Average TFLOPs: 2.993536
+>> VLA-Cache inference mode
+Current CUDA latency: 113.399681 ms | Average CUDA latency: 195.975250 ms, Average TFLOPs: 2.993275
+>> VLA-Cache inference mode
+Current CUDA latency: 172.765274 ms | Average CUDA latency: 195.910236 ms, Average TFLOPs: 2.992991
+Average time per step: 581.1690 ms, Control Frequency: 13.77 Hz, Token Reusing Ratio (Primary): 34.17 %, , Token Reusing Ratio (Wrist): 33.02 %
+Saved rollout MP4 at path ./rollouts/2026_03_22/primary--2026_03_22-23_44_14--episode=28--success=True--task=pick_up_the_black_bowl_on_the_wooden_cabinet_and_p.mp4
+Saved rollout MP4 at path ./rollouts/2026_03_22/wrist--2026_03_22-23_44_14--episode=28--success=True--task=pick_up_the_black_bowl_on_the_wooden_cabinet_and_p.mp4
+03/23 [00:15:30] INFO     | >> Success: True              run_libero_eval.py:230
+                 INFO     | >> # episodes completed so    run_libero_eval.py:230
+                          far: 28                                               
+                 INFO     | >> # successes: 28 (100.0%)   run_libero_eval.py:230
+
+ 33%|███▎      | 1/3 [01:22<02:44, 82.03s/it][A                 INFO     | >>                            run_libero_eval.py:230
+                          Task: pick up the black bowl on                       
+                          the wooden cabinet and place it                       
+                          on the plate                                          
+                 INFO     | >> Starting episode 2...      run_libero_eval.py:230
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+>> VLA-Cache inference mode
+Current CUDA latency: 502.224670 ms | Average CUDA latency: 196.765863 ms, Average TFLOPs: 2.995071
+>> VLA-Cache inference mode
+Current CUDA latency: 318.570984 ms | Average CUDA latency: 197.105153 ms, Average TFLOPs: 2.995113
+>> VLA-Cache inference mode
+Current CUDA latency: 113.306435 ms | Average CUDA latency: 196.872379 ms, Average TFLOPs: 2.995112
+>> VLA-Cache inference mode
+Current CUDA latency: 124.094208 ms | Average CUDA latency: 196.670777 ms, Average TFLOPs: 2.995097
+>> VLA-Cache inference mode
+Current CUDA latency: 125.920288 ms | Average CUDA latency: 196.475334 ms, Average TFLOPs: 2.995049
+>> VLA-Cache inference mode
+Current CUDA latency: 117.151039 ms | Average CUDA latency: 196.256810 ms, Average TFLOPs: 2.995136
+>> VLA-Cache inference mode
+Current CUDA latency: 113.016930 ms | Average CUDA latency: 196.028129 ms, Average TFLOPs: 2.994902
+>> VLA-Cache inference mode
+Current CUDA latency: 172.191422 ms | Average CUDA latency: 195.962823 ms, Average TFLOPs: 2.994677
+>> VLA-Cache inference mode
+Current CUDA latency: 202.215271 ms | Average CUDA latency: 195.979906 ms, Average TFLOPs: 2.994304
+>> VLA-Cache inference mode
+Current CUDA latency: 159.703812 ms | Average CUDA latency: 195.881061 ms, Average TFLOPs: 2.993834
+>> VLA-Cache inference mode
+Current CUDA latency: 111.681725 ms | Average CUDA latency: 195.652258 ms, Average TFLOPs: 2.993498
+>> VLA-Cache inference mode
+Current CUDA latency: 137.044357 ms | Average CUDA latency: 195.493429 ms, Average TFLOPs: 2.993242
+>> VLA-Cache inference mode
+Current CUDA latency: 130.030563 ms | Average CUDA latency: 195.316503 ms, Average TFLOPs: 2.992997
+>> VLA-Cache inference mode
+Current CUDA latency: 231.343353 ms | Average CUDA latency: 195.413610 ms, Average TFLOPs: 2.992734
+>> VLA-Cache inference mode
+Current CUDA latency: 408.220184 ms | Average CUDA latency: 195.985671 ms, Average TFLOPs: 2.992470
+Average time per step: 588.4567 ms, Control Frequency: 13.59 Hz, Token Reusing Ratio (Primary): 33.58 %, , Token Reusing Ratio (Wrist): 33.48 %
+Saved rollout MP4 at path ./rollouts/2026_03_22/primary--2026_03_22-23_44_14--episode=29--success=True--task=pick_up_the_black_bowl_on_the_wooden_cabinet_and_p.mp4
+Saved rollout MP4 at path ./rollouts/2026_03_22/wrist--2026_03_22-23_44_14--episode=29--success=True--task=pick_up_the_black_bowl_on_the_wooden_cabinet_and_p.mp4
+03/23 [00:16:46] INFO     | >> Success: True              run_libero_eval.py:230
+                 INFO     | >> # episodes completed so    run_libero_eval.py:230
+                          far: 29                                               
+                 INFO     | >> # successes: 29 (100.0%)   run_libero_eval.py:230
+
+ 67%|██████▋   | 2/3 [02:37<01:18, 78.46s/it][A                 INFO     | >>                            run_libero_eval.py:230
+                          Task: pick up the black bowl on                       
+                          the wooden cabinet and place it                       
+                          on the plate                                          
+                 INFO     | >> Starting episode 3...      run_libero_eval.py:230
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+>> VLA-Cache inference mode
+Current CUDA latency: 337.097076 ms | Average CUDA latency: 196.363985 ms, Average TFLOPs: 2.994468
+>> VLA-Cache inference mode
+Current CUDA latency: 251.975327 ms | Average CUDA latency: 196.512679 ms, Average TFLOPs: 2.994435
+>> VLA-Cache inference mode
+Current CUDA latency: 121.467133 ms | Average CUDA latency: 196.312557 ms, Average TFLOPs: 2.994271
+>> VLA-Cache inference mode
+Current CUDA latency: 115.600861 ms | Average CUDA latency: 196.097899 ms, Average TFLOPs: 2.994199
+>> VLA-Cache inference mode
+Current CUDA latency: 132.627869 ms | Average CUDA latency: 195.929543 ms, Average TFLOPs: 2.994189
+>> VLA-Cache inference mode
+Current CUDA latency: 123.664223 ms | Average CUDA latency: 195.738365 ms, Average TFLOPs: 2.994202
+>> VLA-Cache inference mode
+Current CUDA latency: 270.352631 ms | Average CUDA latency: 195.935236 ms, Average TFLOPs: 2.994001
+>> VLA-Cache inference mode
+Current CUDA latency: 379.264008 ms | Average CUDA latency: 196.417681 ms, Average TFLOPs: 2.993646
+>> VLA-Cache inference mode
+Current CUDA latency: 164.146942 ms | Average CUDA latency: 196.332980 ms, Average TFLOPs: 2.993261
+>> VLA-Cache inference mode
+Current CUDA latency: 158.152573 ms | Average CUDA latency: 196.233032 ms, Average TFLOPs: 2.993061
+>> VLA-Cache inference mode
+Current CUDA latency: 115.243484 ms | Average CUDA latency: 196.021571 ms, Average TFLOPs: 2.992766
+>> VLA-Cache inference mode
+Current CUDA latency: 110.093155 ms | Average CUDA latency: 195.797799 ms, Average TFLOPs: 2.992417
+>> VLA-Cache inference mode
+Current CUDA latency: 111.605118 ms | Average CUDA latency: 195.579117 ms, Average TFLOPs: 2.992154
+>> VLA-Cache inference mode
+Current CUDA latency: 111.195709 ms | Average CUDA latency: 195.360507 ms, Average TFLOPs: 2.991834
+>> VLA-Cache inference mode
+Current CUDA latency: 134.690399 ms | Average CUDA latency: 195.203736 ms, Average TFLOPs: 2.991630
+Average time per step: 575.2917 ms, Control Frequency: 13.91 Hz, Token Reusing Ratio (Primary): 34.11 %, , Token Reusing Ratio (Wrist): 33.16 %
+Saved rollout MP4 at path ./rollouts/2026_03_22/primary--2026_03_22-23_44_14--episode=30--success=True--task=pick_up_the_black_bowl_on_the_wooden_cabinet_and_p.mp4
+Saved rollout MP4 at path ./rollouts/2026_03_22/wrist--2026_03_22-23_44_14--episode=30--success=True--task=pick_up_the_black_bowl_on_the_wooden_cabinet_and_p.mp4
+03/23 [00:18:00] INFO     | >> Success: True              run_libero_eval.py:230
+                 INFO     | >> # episodes completed so    run_libero_eval.py:230
+                          far: 30                                               
+                 INFO     | >> # successes: 30 (100.0%)   run_libero_eval.py:230
+
+100%|██████████| 3/3 [03:51<00:00, 76.29s/it][A100%|██████████| 3/3 [03:51<00:00, 77.23s/it]
+                 INFO     | >> Current task success rate: run_libero_eval.py:230
+                          1.0                                                   
+                 INFO     | >> Current total success      run_libero_eval.py:230
+                          rate: 1.0                                             
+100%|██████████| 10/10 [33:31<00:00, 214.58s/it]100%|██████████| 10/10 [33:31<00:00, 201.14s/it]
+                 INFO     | >> Final results:             run_libero_eval.py:230
+                 INFO     | >> Total episodes: 30         run_libero_eval.py:230
+                 INFO     | >> Total successes: 30        run_libero_eval.py:230
+                 INFO     | >> Overall success rate:      run_libero_eval.py:230
+                          1.0000 (100.0%)                                       
+                 INFO     | >> Results saved to           run_libero_eval.py:230
+                          ./experiments/results/phase12_l                       
+                          ibero_spatial_cache.json                              
+Exception ignored in: <function MjRenderContext.__del__ at 0x7f354c4aa830>
+Traceback (most recent call last):
+  File "/root/sj-tmp/conda-envs/openvla-oft/lib/python3.10/site-packages/robosuite/utils/binding_utils.py", line 199, in __del__
+    self.gl_ctx.free()
+  File "/root/sj-tmp/conda-envs/openvla-oft/lib/python3.10/site-packages/robosuite/renderers/context/egl_context.py", line 150, in free
+    EGL.eglDestroyContext(EGL_DISPLAY, self._context)
+  File "/root/sj-tmp/conda-envs/openvla-oft/lib/python3.10/site-packages/OpenGL/error.py", line 230, in glCheckError
+    raise self._errorClass(
+OpenGL.raw.EGL._errors.EGLError: EGLError(
+	err = EGL_NOT_INITIALIZED,
+	baseOperation = eglDestroyContext,
+	cArguments = (
+		<OpenGL._opaque.EGLDisplay_pointer object at 0x7f3524fae340>,
+		<OpenGL._opaque.EGLContext_pointer object at 0x7f34d87df740>,
+	),
+	result = 0
+)
+Exception ignored in: <function EGLGLContext.__del__ at 0x7f354c4aa680>
+Traceback (most recent call last):
+  File "/root/sj-tmp/conda-envs/openvla-oft/lib/python3.10/site-packages/robosuite/renderers/context/egl_context.py", line 155, in __del__
+    self.free()
+  File "/root/sj-tmp/conda-envs/openvla-oft/lib/python3.10/site-packages/robosuite/renderers/context/egl_context.py", line 150, in free
+    EGL.eglDestroyContext(EGL_DISPLAY, self._context)
+  File "/root/sj-tmp/conda-envs/openvla-oft/lib/python3.10/site-packages/OpenGL/error.py", line 230, in glCheckError
+    raise self._errorClass(
+OpenGL.raw.EGL._errors.EGLError: EGLError(
+	err = EGL_NOT_INITIALIZED,
+	baseOperation = eglDestroyContext,
+	cArguments = (
+		<OpenGL._opaque.EGLDisplay_pointer object at 0x7f3524fae340>,
+		<OpenGL._opaque.EGLContext_pointer object at 0x7f34d87df740>,
+	),
+	result = 0
+)
