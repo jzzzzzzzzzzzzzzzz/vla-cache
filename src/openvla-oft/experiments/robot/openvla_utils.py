@@ -823,7 +823,7 @@ def get_vla_action(
     # which breaks token_attention_merge (expects 256-patch space).
     # Fix: use last_full_attn (full-space) for get_layer_mask_schedule; use per-step
     # last_attn_scores_* overrides (kept current via compact-space remapping) for B classification.
-    prev_attn = (last_full_attn if (use_preprune and last_full_attn is not None)
+    prev_attn = (last_full_attn if ((use_preprune or use_preprune_v3) and last_full_attn is not None)
                  else prev_attn_raw)
     # B positions from the CURRENT step; set inside Step 4 cascade block.
     all_prune_positions: list = []
@@ -874,17 +874,18 @@ def get_vla_action(
                 )
             else:
                 prune_positions_primary, prune_positions_wrist = [], []
-                if use_prune or use_preprune:
-                    # In cascade mode, last_attn_scores_* are updated each step from compact
-                    # attention via token_attention_merge(..., b_positions=...).  Passing them
-                    # as override keeps B classification current without requiring full-space attns.
+                if use_prune or use_preprune or use_preprune_v3:
+                    # In cascade / E_full mode, last_attn_scores_* are full-space 256-d scores
+                    # (frozen from step-0 full forward or updated via compact remapping).
+                    # Passing them as override avoids feeding compact-attention maps to
+                    # token_attention_merge, which would produce <256-d output and crash reshape.
                     vis_primary, remaining_static_tokens_primary, prune_positions_primary = task_relevant_selection(
                         prev_attn, result_image[0], stable_patches_primary, primary=True, return_prune=True,
-                        attn_scores_override=last_attn_scores_primary if use_preprune else None
+                        attn_scores_override=last_attn_scores_primary if (use_preprune or use_preprune_v3) else None
                     )
                     vis_wrist, remaining_static_tokens_wrist, prune_positions_wrist = task_relevant_selection(
                         prev_attn, result_image[1], stable_patches_wrist, primary=False, return_prune=True,
-                        attn_scores_override=last_attn_scores_wrist if use_preprune else None
+                        attn_scores_override=last_attn_scores_wrist if (use_preprune or use_preprune_v3) else None
                     )
                 else:
                     vis_primary, remaining_static_tokens_primary = task_relevant_selection(
@@ -1113,6 +1114,15 @@ def get_vla_action(
                 'v_global_primary': _new_v_global_primary,
                 'v_global_wrist':   _new_v_global_wrist,
                 'init_attn_scores_primary': _init_scores_primary,
+                # E3 steady-state: freeze primary prune mask from step 1 → constant N_primary_kept
+                # → wrist compact positions stable → wrist KV reuse valid across all subsequent steps.
+                'fixed_prune_p_primary': (
+                    fixed_prune_p_primary  # already frozen → carry forward unchanged
+                    if fixed_prune_p_primary is not None
+                    else (_prune_p_this_step  # step 1 (first preprune_v3 step) → freeze it
+                          if (use_preprune_v3 and cfg.use_vla_cache and _prune_p_this_step)
+                          else None)
+                ),
                 # Store current images so next query can use them for V_dynamic pixel-sim.
                 # result_image = all_images before pop(0), i.e. [primary, wrist] PIL images.
                 'prev_query_images': result_image,
