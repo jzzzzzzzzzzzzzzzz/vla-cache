@@ -1,20 +1,20 @@
 {
   "condition": "baseline",
   "suite": "libero_spatial",
-  "num_trials_per_task": 20,
-  "overall_success_rate": 0.955,
+  "num_trials_per_task": 3,
+  "overall_success_rate": 0.9,
   "per_task_success_rates": [
+    0.6667,
     1.0,
     1.0,
     1.0,
     1.0,
-    0.75,
-    0.95,
+    0.3333,
     1.0,
-    0.95,
     1.0,
-    0.9
+    1.0,
+    1.0
   ],
-  "total_episodes": 200,
-  "total_successes": 191
+  "total_episodes": 30,
+  "total_successes": 27
 }

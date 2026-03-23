@@ -1,18 +1,18 @@
 {
-  "condition": "preprune_v3",
-  "suite": "libero_spatial",
+  "condition": "baseline",
+  "suite": "libero_goal",
   "num_trials_per_task": 20,
   "overall_success_rate": 0.97,
   "per_task_success_rates": [
     1.0,
+    1.0,
     0.95,
-    1.0,
-    1.0,
     0.9,
+    1.0,
+    0.95,
     0.95,
     1.0,
     1.0,
-    0.95,
     0.95
   ],
   "total_episodes": 200,
