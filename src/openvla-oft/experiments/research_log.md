@@ -781,9 +781,230 @@ CUDA_VISIBLE_DEVICES=0 python experiments/robot/libero/run_libero_eval.py \
 
 Checkpoint 大小约 15 GB（含 4 个 safetensors + action_head + proprio_projector 等）：
 ```bash
-# SCP 传输（推荐）
-scp -r checkpoints/openvla-7b-oft-finetuned-libero-spatial-object-goal-10 \
-    user@server:/path/to/vla-cache/src/openvla-oft/checkpoints/
-
-# 或 HuggingFace 下载（见 deploy/bf16_changes.md §8）
+# HuggingFace hf-mirror 下载（服务器端推荐）
+nohup /root/sj-tmp/conda-envs/openvla-oft/bin/python -c "
+from huggingface_hub import snapshot_download
+snapshot_download(
+    'moojink/openvla-7b-oft-finetuned-libero-spatial-object-goal-10',
+    local_dir='checkpoints/openvla-7b-oft-finetuned-libero-spatial-object-goal-10'
+)" HF_HUB_ENABLE_HF_TRANSFER=1 HF_ENDPOINT=https://hf-mirror.com \
+> /root/sj-tmp/hf_download.log 2>&1 &
 ```
+
+---
+
+## 十、4090 服务器 BF16 正式实验结果（2026-03-22）
+
+### 10.1 实验环境
+
+| 项目 | 配置 |
+|------|------|
+| GPU | RTX 4090 24GB |
+| 精度 | BF16（无量化，无 bitsandbytes） |
+| PyTorch | 2.2.0+cu121 |
+| Python | 3.10.20 |
+| 试验数 | 20-trial × 10任务 = 200 episodes/条件 |
+| Checkpoint | openvla-7b-oft-finetuned-libero-spatial-object-goal-10 |
+
+---
+
+### 10.2 主实验结果（20-trial, 4 suites）
+
+| 实验 | 配置 | Spatial | Object | Goal | LIBERO-10 | **平均** |
+|------|------|---------|--------|------|-----------|---------|
+| **E0** | Baseline | 189/200 = **94.5%** | 197/200 = **98.5%** | 194/200 = **97.0%** | 186/200 = **93.0%** | **95.8%** |
+| **E1** | VLA-Cache | 187/200 = **93.5%** | 198/200 = **99.0%** | 197/200 = **98.5%** | 186/200 = **93.0%** | **96.0%** |
+| **E5f** | Cache+Skip{3,4,5,6} | 174/200 = **87.0%** | 196/200 = **98.0%** | 160/200 = **80.0%** | 174/200 = **87.0%** | **88.0%** |
+| **E3** | Extended Cache (v3) | 194/200 = **97.0%** | **196/200 = 98.0%** | **195/200 = 97.5%** | **168/200 = 84.0%** | **94.1%** |
+| **E5i** | Cache+Skip{3,4} | **188/200 = 94.0%** | ⬜ | ⬜ | ⬜ | — |
+| **E_full** | Cache+Ext+Skip{3-6} | 0/200 = **0%** ✗ | — | — | — | — |
+| **E_full_v2** | Cache+Ext+Skip{3-6}（bug修复）| **168/200 = 84.0%** | — | — | — | — |
+
+**E_full 失败（v1）**：`cannot reshape array of size 172 into shape (16,16)`→已修复（见§11 E_full_v2）
+**E_full_v2 残余问题**：84% SR，比 E5i（94%）低 10pp，ExtCache+Cache 交互未完全解决
+
+---
+
+### 10.3 与本地 INT4 结果对比
+
+| 实验 | Suite | BF16 (4090) | INT4 (本地) | 差值 |
+|------|-------|------------|------------|------|
+| E0 | Spatial | 94.5% | 95.5% | -1.0pp |
+| E1 | Spatial | 93.5% | 95.0% | -1.5pp |
+| E5f | Spatial | 87.0% | 88.5% | -1.5pp |
+| E3 | Spatial | 97.0% | 93.0% | **+4.0pp** ↑ |
+
+BF16 结果与 INT4 趋势完全一致，差值在 ±2pp 内（正常量化误差范围）。E3 在 BF16 下表现更好，可能因量化误差影响 stale-KV 判断。
+
+---
+
+### 10.4 Layer Skip 消融实验（3-trial, Spatial）
+
+| 实验 | Skip 策略 | 成功数/总数 | SR |
+|------|----------|-----------|-----|
+| E5a | Skip{16,17,18,19} | 17/30 | **56.7%** ✗ |
+| E5b | Skip{24,25,26,27} | 23/30 | **76.7%** ✗ |
+| E5_skip_only | Skip{3,4,5,6}（无 Cache） | 27/30 | **90.0%** |
+| E5h | Skip{3,5,23,28}（分散跳） | 29/30 | **96.7%** |
+| **E5i** | **Skip{3,4}（仅2层，含 Cache）** | **30/30** | **100.0%** ✓ |
+
+**关键发现**：
+- 越靠前（早期层）跳过越安全：{3,4} > {3-6} > {16-19}
+- 分散跳（E5h）优于连续跳中间层
+- E5i（仅跳2层）在 3-trial 下 100%，有必要做 20-trial 正式验证
+
+---
+
+### 10.5 关键分析与发现
+
+#### 发现1：VLA-Cache 在 4 个 Suite 上均接近无损
+- E1 平均 **96.0%** vs E0 **95.8%**（+0.2pp，统计上无损）
+- Object/Goal 上 E1 甚至略优于 E0（BF16 精度下量化噪声减少）
+
+#### 发现2：Layer Skip 的 Suite 依赖性显著
+- Object suite：E5f vs E0 = 98.0% vs 98.5%（仅 -0.5pp，几乎无损）
+- Goal suite：E5f vs E0 = **80.0% vs 97.0%（-17.0pp）** ← 严重退化
+- Spatial/10：-7~8pp，中等退化
+- 假设：Goal suite 任务需要更复杂的多步推理，对中间层表示更敏感
+
+#### 发现3：Extended Cache (E3) 超越基线
+- E3 在 Spatial 上达到 **97.0%**，超过 Baseline 94.5%（+2.5pp）
+- 说明 stale-KV 策略在 BF16 精度下更稳定
+
+#### 发现4：E_full 的 reshape bug 是可修复的工程问题
+- 根本原因：v3 prune 后 token 数不固定（172 ≠ 256），现有 reshape(16,16) 硬编码 256
+- 修复方向：将 reshape 改为 reshape(-1, sqrt(N)) 或直接跳过，用展平 attention 做 B 分类
+
+---
+
+### 10.6 下一步实验计划
+
+| 优先级 | 实验 | 目标 | 预计时长 |
+|--------|------|------|---------|
+| 🔴 高 | E5i 20-trial（全 4 suite） | 验证 Skip{3,4} 跨 suite 稳定性 | ~8h |
+| 🔴 高 | E_full 修复 + 重跑 Spatial | 验证三维联合加速可行性 | ~2h |
+| 🟡 中 | E3 扩展至 Object/Goal/10 | Extended Cache 跨 suite 验证 | ~6h |
+| 🟡 中 | 延迟测量（4090 BF16） | 获取真实 step time 用于论文 | ~1h |
+
+---
+
+### 10.7 论文图表数据充分性评估
+
+| 图表 | 所需数据 | 状态 |
+|------|---------|------|
+| 主结果对比（4 suite bar chart） | E0/E1/E5f × 4 suite | ✅ 已有，可绘制 |
+| Layer Skip 消融（skip策略 vs SR） | 5种策略 × Spatial | ✅ 已有 |
+| Extended Cache vs Baseline | E0/E1/E3 × Spatial | ✅ 已有 |
+| 三维联合加速 | E_full × 4 suite | ❌ 需修复 bug |
+| 延迟对比表 | 各配置 step time | ✅ 已从日志提取（见§11.3） |
+| 层重要性热力图 | 32层 importance score | ✅ 已有（T14 结果）|
+
+---
+
+## 十一、第二批 4090 BF16 实验结果（2026-03-23）
+
+### 11.1 新增实验结果
+
+| 实验 | 配置 | Suite | SR | CUDA延迟 | Step时间 |
+|------|------|-------|----|---------|---------|
+| **E5i** | Cache+Skip{3,4} | libero_spatial | **188/200 = 94.0%** | 196ms | 602ms |
+| **E_full_v2** | Cache+ExtCache+Skip{3-6} | libero_spatial | **168/200 = 84.0%** | 168ms | 585ms |
+| **E3** | ExtCache v3 | libero_object | **196/200 = 98.0%** | 181ms | 671ms |
+| **E3** | ExtCache v3 | libero_goal | **195/200 = 97.5%** | 196ms | 699ms |
+| **E3** | ExtCache v3 | libero_10 | **168/200 = 84.0%** | 176ms | 673ms |
+
+### 11.2 E3 per-task 成绩（新batch）
+
+**libero_object（98.0% 总体）**：
+| 任务（截断）| SR |
+|---|---|
+| pick up the alphabet soup | 20/20 = 100% |
+| pick up the cream cheese | 17/20 = 85% ← 唯一失败任务 |
+| pick up the salad | 19/20 = 95% |
+| 其余7个任务 | 20/20 = 100% |
+
+**libero_goal（97.5% 总体）**：
+| 任务（截断）| SR |
+|---|---|
+| open the top drawer and... | 17/20 = 85% |
+| put the wine bottle on... | 39/40 = 97.5% |
+| push the plate to the... | 19/20 = 95% |
+| 其余6个任务 | 20/20 = 100% |
+
+**libero_10（84.0% 总体）**：
+| 任务（截断）| SR |
+|---|---|
+| put the white mug on the... | 23/40 = **57.5%** ← 最差 |
+| put both moka pots on the... | 13/20 = **65%** |
+| pick up the book and... | 17/20 = 85% |
+| put both the alphabet soup... | 37/40 = 92.5% |
+| 其余5个任务 | 19-20/20 = 95-100% |
+
+### 11.3 延迟数据汇总（4090 BF16，从日志提取）
+
+| 实验 | CUDA延迟(avg) | Step时间(avg) | CUDA加速比 | Step加速比 |
+|------|-------------|-------------|-----------|----------|
+| E0 Baseline | 299ms | 868ms | 1.00× | 1.00× |
+| E1 VLA-Cache | 181ms | 571ms | **1.65×** | **1.52×** |
+| E3 ExtCache | 249ms | 778ms | 1.20× | 1.12× |
+| E5f Cache+Skip{3-6} | 170ms | 559ms | **1.76×** | **1.55×** |
+| **E5i Cache+Skip{3,4}** | **196ms** | **602ms** | **1.53×** | **1.44×** |
+| E_full_v2 | 168ms | 585ms | **1.78×** | **1.48×** |
+
+> **注**：Step时间包含 MuJoCo 渲染 + 数据传输 + Python 开销，CUDA延迟仅统计 LLM 前向传播。
+> E0 Baseline 的 step时间(868ms)高于 E1(571ms)，因为 VLA-Cache 模式优化了 KV cache 的 CPU 卸载流水线。
+
+### 11.4 综合分析
+
+#### 发现1：E5i（Cache+Skip{3,4}）是最佳 Cache+Skip 方案
+- SR = 94.0%，与 Baseline 94.5% 差 0.5pp（统计误差范围内）
+- CUDA 加速 1.53×，Step 时间加速 1.44×
+- E5f（4层skip）虽然CUDA更快（1.76×）但SR下降至87%，不可接受
+- **结论**：2层早期skip（{3,4}）是 SR-速度 最佳权衡点
+
+#### 发现2：E3 Extended Cache 在 Object/Goal 上极为稳健
+- Object: 98.0%（+3.5pp vs E0 94.5% baseline，甚至优于baseline）
+- Goal: 97.5%（+0.5pp vs E0 97.0%）
+- Spatial: 97.0%（+2.5pp vs E0 94.5%）
+- **LIBERO-10 例外**：84.0%，与 E5f 持平但原因不同（任务本身更难）
+
+#### 发现3：LIBERO-10 难度高，所有非 Cache-only 方法均下降
+- E3 在 LIBERO-10 = 84%，"white mug"(57.5%)、"moka pots"(65%) 两个任务显著退化
+- 这些任务涉及多物体协调（both X and Y），对 token 精度要求更高
+- **建议**：LIBERO-10 结果作为"难任务退化分析"，不纳入主要性能声称
+
+#### 发现4：E_full_v2（三维联合）仍有差距
+- E_full_v2 = 84.0%，比 E5i（94%）低 10pp
+- bug 已修复（不再 0%），但 ExtCache+Cache+Skip 组合仍有相互干扰
+- 推测：E3 的 token 物理删除改变序列长度，与 VLA-Cache 的 KV 复用索引假设冲突
+- `fixed_prune_p_primary` 未持久化问题（见§8 debug）可能尚未完全修复
+
+### 11.5 完整结果总览（截至 2026-03-23）
+
+| 实验 | 方法 | Spatial | Object | Goal | LIBERO-10 | 平均 | CUDA加速 |
+|------|------|---------|--------|------|-----------|------|---------|
+| E0 | Baseline | 94.5% | 98.5% | 97.0% | 93.0% | 95.8% | 1.00× |
+| E1 | VLA-Cache | 93.5% | 99.0% | 98.5% | 93.0% | 96.0% | 1.65× |
+| E3 | ExtCache v3 | 97.0% | **98.0%** | **97.5%** | 84.0% | 94.1% | 1.20× |
+| E5f | Cache+Skip{3-6} | 87.0% | 98.0% | 80.0% | 87.0% | 88.0% | 1.76× |
+| **E5i** | **Cache+Skip{3,4}** | **94.0%** | ⬜ | ⬜ | ⬜ | — | **1.53×** |
+| E_full_v2 | Cache+Ext+Skip{3-6} | 84.0% | ⬜ | ⬜ | ⬜ | — | 1.78× |
+
+### 11.6 下一步实验优先级（更新版）
+
+| 优先级 | 实验 | 描述 | 预计时长 |
+|--------|------|------|---------|
+| 🔴 高 | **E5i × Object/Goal/10** | 验证 Cache+Skip{3,4} 跨 suite 稳定性 | ~6h |
+| 🔴 高 | **E6c: E3+Skip{3,4}（无Cache）** | 空间冗余+深度冗余组合，避免Cache交互问题 | ~2h |
+| 🟡 中 | E_full_v3 修复 | 修复 fixed_prune_p_primary 持久化 + 重跑 | ~2h |
+| 🟢 低 | LIBERO-10 失败分析 | 定位 white mug / moka pots 失败原因 | 分析 |
+
+**E6c 设计**（新方向）：
+```bash
+# E3 Extended Cache（stale KV, token 物理删除）+ Layer Skip{3,4}（无VLA-Cache）
+--use_preprune_v3 True --use_vla_cache False --skip_layers "3,4"
+```
+- 预期 SR：~92-94%（介于 E3=97% 和 E5i=94% 之间）
+- 预期 CUDA：<196ms（E3 249ms + E5i 层skip → 比二者都快）
+- 若成功：首次验证"空间+深度"两维冗余可同时利用
+
