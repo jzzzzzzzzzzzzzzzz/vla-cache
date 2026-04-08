@@ -1,0 +1,110 @@
+2026-04-08 07:37:14.590768: I tensorflow/core/util/port.cc:113] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2026-04-08 07:37:14.639135: E external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:9261] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+2026-04-08 07:37:14.639169: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:607] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+2026-04-08 07:37:14.640642: E external/local_xla/xla/stream_executor/cuda/cuda_blas.cc:1515] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+2026-04-08 07:37:14.648249: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 AVX512F AVX512_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2026-04-08 07:37:15.615588: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Could not find TensorRT
+[robosuite WARNING] No private macro file found! (macros.py:53)
+[robosuite WARNING] It is recommended to use a private macro file (macros.py:54)
+[robosuite WARNING] To setup, run: python /root/sj-tmp/conda-envs/openvla-oft/lib/python3.10/site-packages/robosuite/scripts/setup_macros.py (macros.py:55)
+Gym has been unmaintained since 2022 and does not support NumPy 2.0 amongst other critical functionality.
+Please upgrade to Gymnasium, the maintained drop-in replacement of Gym, or contact the authors of your software and request that they upgrade.
+See the migration guide at https://gymnasium.farama.org/introduction/migration_guide/ for additional information.
+Using LIBERO constants:
+  NUM_ACTIONS_CHUNK = 8
+  ACTION_DIM = 7
+  PROPRIO_DIM = 8
+  ACTION_PROPRIO_NORMALIZATION_TYPE = bounds_q99
+If needed, manually set the correct constants in `prismatic/vla/constants.py`!
+04/08 [07:37:39] INFO     | >> generated new fontManager    font_manager.py:1443
+/root/sj-tmp/conda-envs/openvla-oft/lib/python3.10/site-packages/matplotlib/_mathtext.py:30: PyparsingDeprecationWarning: 'enablePackrat' deprecated - use 'enable_packrat'
+  ParserElement.enablePackrat()
+                 WARNING  | >> In                                    core.py:201
+                          /root/sj-tmp/conda-envs/openvla-oft/lib/py            
+                          thon3.10/site-packages/matplotlib/mpl-data            
+                          /stylelib/classic.mplstyle: 'parseString'             
+                          deprecated - use 'parse_string'                       
+                 WARNING  | >> In                                    core.py:201
+                          /root/sj-tmp/conda-envs/openvla-oft/lib/py            
+                          thon3.10/site-packages/matplotlib/mpl-data            
+                          /stylelib/classic.mplstyle: 'resetCache'              
+                          deprecated - use 'reset_cache'                        
+Instantiating pretrained VLA policy...
+Created backup of original config at: /root/sj-tmp/workspace/vla-cache/src/openvla-oft/checkpoints/openvla-7b-oft-finetuned-libero-spatial-object-goal-10/config.json.back.20260408_073742
+Updated config.json at: /root/sj-tmp/workspace/vla-cache/src/openvla-oft/checkpoints/openvla-7b-oft-finetuned-libero-spatial-object-goal-10/config.json
+Changes made:
+  - Set AutoConfig to "configuration_prismatic.OpenVLAConfig"
+  - Set AutoModelForVision2Seq to "modeling_prismatic.OpenVLAForActionPrediction"
+04/08 [07:37:42] WARNING  | >> Expected                modeling_prismatic.py:333
+                          `transformers==4.40.1` and                            
+                          `tokenizers==0.19.1` but got                          
+                          `transformers==4.47.0` and                            
+                          `tokenizers==0.21.1`; there                           
+                          might be inference-time                               
+                          regressions due to                                    
+                          dependency changes. If in                             
+                          doubt, pleaseuse the above                            
+                          versions.                                             
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:00<00:00,  3.40it/s]Loading checkpoint shards:  50%|█████     | 2/4 [00:00<00:00,  3.82it/s]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:00<00:00,  3.82it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:01<00:00,  4.06it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:01<00:00,  3.93it/s]
+Loaded model: <class 'transformers_modules.openvla-7b-oft-finetuned-libero-spatial-object-goal-10.modeling_prismatic.OpenVLAForActionPrediction'>
+04/08 [07:37:54] INFO     | >> Logging to local log file: run_libero_eval.py:215
+                          ./experiments/logs/EVAL-libero_                       
+                          spatial-openvla-2026_04_08-07_3                       
+                          7_40--LAT_E0_baseline_5t.txt                          
+[info] using task orders [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+                 INFO     | >> Task suite: libero_spatial run_libero_eval.py:230
+  0%|          | 0/10 [00:00<?, ?it/s][Warning]: datasets path /root/sj-tmp/workspace/LIBERO/libero/libero/../datasets does not exist!
+                 INFO     | >> Using default initial      run_libero_eval.py:230
+                          states                                                
+[Warning]: datasets path /root/sj-tmp/workspace/LIBERO/libero/libero/../datasets does not exist!
+
+  0%|          | 0/5 [00:00<?, ?it/s][A04/08 [07:37:57] INFO     | >>                            run_libero_eval.py:230
+                          Task: pick up the black bowl                          
+                          between the plate and the                             
+                          ramekin and place it on the                           
+                          plate                                                 
+                 INFO     | >> Starting episode 1...      run_libero_eval.py:230
+LlamaModel is using LlamaSdpaAttention, but `torch.nn.functional.scaled_dot_product_attention` does not support `output_attentions=True`. Falling back to the manual attention implementation, but specifying the manual implementation will be required from Transformers version v5.0.0 onwards. This warning can be removed using the argument `attn_implementation="eager"` when loading the model.
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+>> VLA-Cache disabled
+Current CUDA latency: 596.430664 ms | Average CUDA latency: 596.430664 ms, Average TFLOPs: 4.013935
+>> VLA-Cache disabled
+Current CUDA latency: 526.413818 ms | Average CUDA latency: 561.422241 ms, Average TFLOPs: 4.013935
+>> VLA-Cache disabled
+Current CUDA latency: 480.779694 ms | Average CUDA latency: 534.541392 ms, Average TFLOPs: 4.013935
+>> VLA-Cache disabled
+Current CUDA latency: 742.212463 ms | Average CUDA latency: 586.459160 ms, Average TFLOPs: 4.013935
+>> VLA-Cache disabled
+Current CUDA latency: 314.496429 ms | Average CUDA latency: 532.066614 ms, Average TFLOPs: 4.013935
+>> VLA-Cache disabled
+Current CUDA latency: 801.873657 ms | Average CUDA latency: 577.034454 ms, Average TFLOPs: 4.013935
+>> VLA-Cache disabled
+Current CUDA latency: 307.575378 ms | Average CUDA latency: 538.540301 ms, Average TFLOPs: 4.013935
+>> VLA-Cache disabled
+Current CUDA latency: 487.894135 ms | Average CUDA latency: 532.209530 ms, Average TFLOPs: 4.013935
+>> VLA-Cache disabled
+Current CUDA latency: 322.797119 ms | Average CUDA latency: 508.941484 ms, Average TFLOPs: 4.013935
+>> VLA-Cache disabled
+Current CUDA latency: 348.027557 ms | Average CUDA latency: 492.850092 ms, Average TFLOPs: 4.013935
+Average time per step: 1122.2275 ms, Control Frequency: 7.13 Hz, Token Reusing Ratio (Primary): 0.00 %, , Token Reusing Ratio (Wrist): 0.00 %
+Saved rollout MP4 at path ./rollouts/2026_04_08/primary--2026_04_08-07_37_40--episode=1--success=True--task=pick_up_the_black_bowl_between_the_plate_and_the_r.mp4
+Saved rollout MP4 at path ./rollouts/2026_04_08/wrist--2026_04_08-07_37_40--episode=1--success=True--task=pick_up_the_black_bowl_between_the_plate_and_the_r.mp4
+04/08 [07:38:44] INFO     | >> Success: True              run_libero_eval.py:230
+                 INFO     | >> # episodes completed so    run_libero_eval.py:230
+                          far: 1                                                
+                 INFO     | >> # successes: 1 (100.0%)    run_libero_eval.py:230
+
+ 20%|██        | 1/5 [00:47<03:08, 47.16s/it][A                 INFO     | >>                            run_libero_eval.py:230
+                          Task: pick up the black bowl                          
+                          between the plate and the                             
+                          ramekin and place it on the                           
+                          plate                                                 
+                 INFO     | >> Starting episode 2...      run_libero_eval.py:230
